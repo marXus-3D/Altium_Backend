@@ -44,4 +44,29 @@ export default class AltiumController{
           res.status(500).json({ error: e.message });
         }
     }
+
+    static async getUser(req,res,next)
+    {
+        try {
+            console.log(`getting user.... ${req.params.id}`);
+
+            const id = req.params.id;
+            const userResponse = await AltiumDAO.getUser(id);
+
+          res.status(200).json(userResponse);
+        } catch (e) {
+          res.status(500).json({ error: e.message });
+        }
+    }
+
+    static async getUsers(req,res,next){
+        try {
+            console.log(`getting users....`);
+            const userResponse = await AltiumDAO.getUsers();
+
+            res.status(200).json(userResponse);
+        } catch (e) {
+        res.status(500).json({ error: e.message });
+        }
+    }
 }

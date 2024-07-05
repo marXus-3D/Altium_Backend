@@ -55,4 +55,36 @@ export default class AltiumDAO {
         throw e;
       }
   }
+
+  static async getUser(userid)
+  {
+    try {
+      console.log(`getting user ${userid} from db`);
+      const filter = { user_id:userid };
+      const user = await users.findOne(filter);
+
+      if (user) {
+        console.log("Found user:", user);
+        return user;
+      } else {
+        throw new Error("No user found with the provided user_id");
+      }
+    } catch (e) {
+      console.log(`error while getting user ${e.message}`);
+      throw e;
+    }
+  }
+
+  static async getUsers()
+  {
+    try {
+      const cursor = await users.find({}); // Empty filter fetches all documents
+      const usersarr = await cursor.toArray();
+
+      return usersarr;
+    } catch (e) {
+      console.log(`error while getting user ${e.message}`);
+      throw e;
+    }
+  }
 }
