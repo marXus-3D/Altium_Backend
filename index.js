@@ -1,7 +1,7 @@
-import AltiumDAO from "../dao/altiumDAO.js";
 import dotenv from "dotenv";
 import app from "./server.js";
 import mongodb from "mongodb";
+import AltiumDAO from "./dao/altiumDAO.js";
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ console.log(process.env.MUSERNAME);
 console.log(process.env.PASSWORD);
 
 const MongoClient = mongodb.MongoClient;
-const uri = `mongodb+srv://${process.env.MUSERNAME}:${process.env.PASSWORD}@cluster0.hb4lvyw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.MUSERNAME}:${process.env.PASSWORD}@cluster0.uicbemz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const PORT = 8000;
 
 MongoClient.connect(

@@ -3,7 +3,7 @@ const ObjectId = mongodb.ObjectId;
 
 let users;
 
-export default class ReviewsDAO {
+export default class AltiumDAO {
   static async injectDB(conn) {
     if (users) {
       return
@@ -15,5 +15,13 @@ export default class ReviewsDAO {
     }
   }
 
-  
+  static async addUser (user){
+    try {
+        console.log(`adding user ${user.username}`);
+        return await users.insertOne(user);
+      } catch (e) {
+        console.error(`Unable to post review: ${e}`);
+        return { error: e };
+      }
+  }
 }
