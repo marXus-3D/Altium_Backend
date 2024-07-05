@@ -1,7 +1,7 @@
 import AltiumDAO from "../dao/altiumDAO.js";
 
 export default class AltiumController{
-    static async PostUser(req,res,next){
+    static async postUser(req,res,next){
         try {
             console.log('Posting user....');
             const user = {
@@ -19,6 +19,29 @@ export default class AltiumController{
           res.status(200).json({ status: "success" })
         } catch (e) {
           res.status(500).json({ error: e.message })
+        }
+    }
+
+    static async updateUser(req,res,next)
+    {
+        try {
+            console.log('updating user....');
+            const user = {
+                user_id : req.params.id,
+                username : req.body.username,
+                email : req.body.email,
+                password : req.body.password,
+                f_name : req.body.fname,
+                l_name : req.body.lname, 
+                bio : req.body.bio,
+                profile_picture : req.body.ppic,
+                followers : parseInt(req.body.followers),
+            };
+            const userResponse = await AltiumDAO.updateUser(user);
+
+          res.status(200).json({ status: "success" });
+        } catch (e) {
+          res.status(500).json({ error: e.message });
         }
     }
 }
