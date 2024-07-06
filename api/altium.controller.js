@@ -4,8 +4,9 @@ export default class AltiumController{
     static async postUser(req,res,next){
         try {
             console.log('Posting user....');
+            const uid = AltiumController.uuidv4();
             const user = {
-                user_id : req.body.userId,
+                user_id : uid,
                 username : req.body.username,
                 email : req.body.email,
                 password : req.body.password,
@@ -16,8 +17,10 @@ export default class AltiumController{
                 followers : parseInt(req.body.followers),
             };
             const userResponse = await AltiumDAO.addUser(user);
-          res.status(200).json({ status: "success" })
+          res.status(200).json({ status: "success" });
+          console.log(user);
         } catch (e) {
+            console.log(e);
           res.status(500).json({ error: e.message })
         }
     }
@@ -68,5 +71,14 @@ export default class AltiumController{
         } catch (e) {
         res.status(500).json({ error: e.message });
         }
+    }
+
+    static uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+        .replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0, 
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 }
