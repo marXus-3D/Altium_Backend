@@ -9,6 +9,8 @@ router.route("/users/:id")
 router.route("/users")
     .get(AltiumCtrl.getUsers)
     .post(AltiumCtrl.postUser);
+router.route("/followers")
+    .post(AltiumCtrl.postFollower);
 // router.route("/movie/:id").get(AltiumCtrl.apiGetReviews);
 // router.route("/new").post(AltiumCtrl.apiPostReview);
 // router.route("/:id")

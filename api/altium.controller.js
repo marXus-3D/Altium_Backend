@@ -81,4 +81,26 @@ export default class AltiumController{
             return v.toString(16);
         });
     }
+
+    static async postFollower(req,res,next)
+    {
+        try {
+            console.log(`${req.body.follower_id} Following user ${req.body.following_id}`);
+            const followers = {
+                follower_id : req.body.follower_id, 
+                following_id : req.body.following_id,
+            };
+            let userResponse;
+            const followResponse = await AltiumDAO.addFollowers(followers).then(
+                userResponse = await AltiumDAO.getUser(followers.follower_id),
+                userResponse.followers++,
+                AltiumDAO.updateUser(userResponse),
+            );
+          res.status(200).json({ status: "success" });
+          console.log(userResponse);
+        } catch (e) {
+            console.log(e);
+          res.status(500).json({ error: e.message })
+        }
+    }
 }

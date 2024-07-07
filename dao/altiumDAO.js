@@ -3,16 +3,18 @@ import mongodb from "mongodb";
 const ObjectId = mongodb.ObjectId;
 
 let users;
+let followers;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
-    if (users) {
+    if (users && followers) {
       return
     }
     try {
-        users = await conn.db("altium").collection("users")
+        users = await conn.db("altium").collection("users");
+        followers = await conn.db("altium").collection("followers");
     } catch (e) {
-      console.error(`Unable to establish collection handles in userDAO: ${e}`)
+      console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
   }
 
@@ -85,6 +87,17 @@ export default class AltiumDAO {
     } catch (e) {
       console.log(`error while getting user ${e.message}`);
       throw e;
+    }
+  }
+
+  static async addFollowers(followersObj)
+  {
+    try {
+      console.log(`adding followers ${followersObj}`);
+      return await followers.insertOne(followersObj);
+    } catch (e) {
+      console.error(`Unable to post follower: ${e}`);
+      return { error: e };
     }
   }
 }
