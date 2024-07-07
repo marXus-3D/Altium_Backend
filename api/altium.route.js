@@ -15,7 +15,9 @@ router.route("/followers")
 router.route("/followers/:id")
     .get(AltiumCtrl.getFollowers);
 router.route("/posts")
-    .post(AltiumCtrl.postFollower);
+    .post(AltiumCtrl.postPosts);
+router.route("/posts/:id")
+    .get(AltiumCtrl.getPost);
 // router.route("/movie/:id").get(AltiumCtrl.apiGetReviews);
 // router.route("/new").post(AltiumCtrl.apiPostReview);
 // router.route("/:id")

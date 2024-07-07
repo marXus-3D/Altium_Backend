@@ -144,7 +144,7 @@ export default class AltiumController{
         }
     }
 
-    static async postFollower(req,res,next)
+    static async postPosts(req,res,next)
     {
         try {
             console.log(`$user ${req.body.user_id} posted ${req.body.content}`);
@@ -168,6 +168,20 @@ export default class AltiumController{
         } catch (e) {
             console.log(e);
           res.status(500).json({ error: e.message })
+        }
+    }
+
+    static async getPost(req,res,next)
+    {
+        try {
+            console.log(`getting post.... ${req.params.id}`);
+
+            const id = req.params.id;
+            const userResponse = await AltiumDAO.getUser(id);
+
+          res.status(200).json(userResponse);
+        } catch (e) {
+          res.status(500).json({ error: e.message });
         }
     }
 }
