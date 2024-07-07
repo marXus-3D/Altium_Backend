@@ -10,6 +10,7 @@ router.route("/users")
     .get(AltiumCtrl.getUsers)
     .post(AltiumCtrl.postUser);
 router.route("/followers")
+    .delete(AltiumCtrl.deleteFollowers)
     .post(AltiumCtrl.postFollower);
 router.route("/followers/:id")
     .get(AltiumCtrl.getFollowers);

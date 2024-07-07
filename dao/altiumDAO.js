@@ -120,4 +120,15 @@ export default class AltiumDAO {
       throw e;
     }
   }
+
+  static async deleteFollowers(followersObj)
+  {
+    try {
+      console.log(`deleteing followers ${followersObj}`);
+      return await followers.deleteOne(followersObj);
+    } catch (e) {
+      console.error(`Unable to delete follower: ${e}`);
+      return { error: e };
+    }
+  }
 }
