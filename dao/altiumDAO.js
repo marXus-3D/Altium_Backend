@@ -100,4 +100,24 @@ export default class AltiumDAO {
       return { error: e };
     }
   }
+
+  static async getFollowers(userid)
+  {
+    try {
+      console.log(`getting user ${userid} from db`);
+      const filter = { follower_id:userid };
+      const users = await followers.find(filter);
+      const response = await users.toArray();
+
+      if (response) {
+        console.log("Found user:", response);
+        return response;
+      } else {
+        throw new Error("No user found with the provided user_id");
+      }
+    } catch (e) {
+      console.log(`error while getting user ${e.message}`);
+      throw e;
+    }
+  }
 }

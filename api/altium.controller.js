@@ -103,4 +103,17 @@ export default class AltiumController{
           res.status(500).json({ error: e.message })
         }
     }
+    static async getFollowers(req,res,next)
+    {
+        try {
+            console.log(`getting user.... ${req.params.id}`);
+
+            const id = req.params.id;
+            const userResponse = await AltiumDAO.getFollowers(id);
+
+          res.status(200).json(userResponse);
+        } catch (e) {
+          res.status(500).json({ error: e.message });
+        }
+    }
 }
