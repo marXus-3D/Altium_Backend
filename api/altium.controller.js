@@ -82,6 +82,12 @@ export default class AltiumController{
         });
     }
 
+    static generatePostId() {
+        const timestamp = Date.now();
+        const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+        return `post-${timestamp}-${randomPart}`;
+      }
+
     static async postFollower(req,res,next)
     {
         try {
@@ -132,6 +138,33 @@ export default class AltiumController{
             );
           res.status(200).json({ status: "success" });
           console.log(userResponse);
+        } catch (e) {
+            console.log(e);
+          res.status(500).json({ error: e.message })
+        }
+    }
+
+    static async postFollower(req,res,next)
+    {
+        try {
+            console.log(`$user ${req.body.user_id} posted ${req.body.content}`);
+            const post = {
+                post_id : AltiumController.generatePostId(),
+                user_id : req.body.user_id, 
+                content : req.body.content,
+                media_type: req.body.media_type,
+                media_url: req.body.media_url,
+                timestamp: Date.now().toString(),
+                no_like : 0,
+                no_comments : 0,
+            };
+            console.log(post);
+            const followResponse = await AltiumDAO.addPost(post).then(value => { 
+                if (!value) {
+                throw new Error('Error while posting');
+            }
+            });
+          res.status(200).json({ status: "success" });
         } catch (e) {
             console.log(e);
           res.status(500).json({ error: e.message })

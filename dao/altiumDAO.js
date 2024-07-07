@@ -1,18 +1,23 @@
-import { error } from "console";
-import mongodb from "mongodb";
+import { Console, error } from "console";
+import mongodb, { Timestamp } from "mongodb";
+import AltiumController from "../api/altium.controller.js";
 const ObjectId = mongodb.ObjectId;
 
 let users;
 let followers;
+let posts;
+let hashtags;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
-    if (users && followers) {
+    if (users && followers && posts && hashtags) {
       return
     }
     try {
         users = await conn.db("altium").collection("users");
         followers = await conn.db("altium").collection("followers");
+        posts = await conn.db("altium").collection("posts");
+        hashtags = await conn.db("altium").collection("hashtags");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -131,4 +136,40 @@ export default class AltiumDAO {
       return { error: e };
     }
   }
+
+  static async addPost (post){
+    try {
+        console.log(`Posting ${post}`);
+        const hashtag = AltiumDAO.extractHashtags(post.content);
+        for (const hash of hashtag) {
+          const newDoc = { 
+            tag: hash,
+            timestamp: post.timestamp,
+           };
+          await hashtags.insertOne(newDoc);
+        }
+        return await posts.insertOne(post);
+      } catch (e) {
+        console.error(`Unable to post review: ${e}`);
+        throw e;
+        return { error: e };
+      }
+  }
+
+  static extractHashtags(text) {
+    //console.log(text);
+    const hashtagRegex = /#(\w+)/g;
+  
+    // Use matchAll to find all matches of the regex
+    const matches = text.matchAll(hashtagRegex);
+  
+    // Extract the hashtag groups from the matches
+    const hashtags = [];
+    for (const match of matches) {
+      hashtags.push(match[1]); // Access the captured word after the # symbol
+    }
+  
+    return hashtags;
+  }
+
 }
