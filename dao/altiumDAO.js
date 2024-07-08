@@ -67,7 +67,8 @@ export default class AltiumDAO {
   {
     try {
       console.log(`getting user ${userid} from db`);
-      const filter = { user_id:userid };
+      console.log(userid.toString().length);
+      const filter = userid.toString().length === 36 ? { user_id:userid } : {username:userid};
       const user = await users.findOne(filter);
 
       if (user) {
@@ -137,7 +138,7 @@ export default class AltiumDAO {
     }
   }
 
-  static async getUser(postid)
+  static async getPost(postid)
   {
     try {
       console.log(`getting post ${postid} from db`);
