@@ -234,4 +234,16 @@ export default class AltiumDAO {
     }
   }
 
+  static async deleteLike(like)
+  {
+    try {
+      console.log(`deleteing like ${like}`);
+      return await likes.deleteOne(like);
+    } catch (e) {
+      console.error(`Unable to delete like: ${e}`);
+      throw e;
+      // return { error: e };
+    }
+  }
+
 }

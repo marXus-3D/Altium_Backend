@@ -212,4 +212,25 @@ export default class AltiumController{
       const randomPart = Math.floor(Math.random() * 1000000); // More random digits
       return `like-${timestamp}-${randomPart}`;
     }
+    static async deleteLike(req,res,next)
+    {
+        try {
+            console.log(`${req.body.user_id} unliked post ${req.body.post_id}`);
+            const like = {
+              user_id : req.body.user_id,
+              post_id : req.body.post_id,
+            };
+            let userResponse;
+            const followResponse = await AltiumDAO.deleteLike(like).then(
+              userResponse = await AltiumDAO.getPost(like.post_id),
+              userResponse.no_like--,
+              AltiumDAO.updatePost(userResponse),
+          );
+          res.status(200).json({ status: "success" });
+          console.log(userResponse);
+        } catch (e) {
+            console.log(e);
+          res.status(500).json({ error: e.message });
+        }
+    }
 }
