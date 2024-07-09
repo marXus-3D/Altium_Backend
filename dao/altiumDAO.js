@@ -158,6 +158,25 @@ export default class AltiumDAO {
       throw e;
     }
   }
+  static async getPostByUser(userid)
+  {
+    try {
+      console.log(`getting post ${userid} from db`);
+      const filter = { user_id:userid };
+      const post = await posts.find(filter);
+      const response = await post.toArray();
+
+      if (response) {
+        console.log("Found posts:", response);
+        return response;
+      } else {
+        throw new Error("No post found with the provided postid");
+      }
+    } catch (e) {
+      console.log(`error while getting post ${e.message}`);
+      throw e;
+    }
+  }
 
   static async addPost (post){
     try {

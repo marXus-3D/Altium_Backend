@@ -15,6 +15,7 @@ router.route("/followers")
 router.route("/followers/:id")
     .get(AltiumCtrl.getFollowers);
 router.route("/posts")
+    .get(AltiumCtrl.getPostByUser)
     .post(AltiumCtrl.postPosts);
 router.route("/posts/:id")
     .get(AltiumCtrl.getPost);

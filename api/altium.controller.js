@@ -184,6 +184,19 @@ export default class AltiumController{
           res.status(500).json({ error: e.message });
         }
     }
+    static async getPostByUser(req,res,next)
+    {
+        try {
+            console.log(`getting post by id.... ${req.body.user_id}`);
+
+            const id = req.body.user_id;
+            const userResponse = await AltiumDAO.getPostByUser(id);
+
+          res.status(200).json(userResponse);
+        } catch (e) {
+          res.status(500).json({ error: e.message });
+        }
+    }
     static async postLike(req,res,next)
     {
         try {
