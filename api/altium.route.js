@@ -18,6 +18,8 @@ router.route("/posts")
     .post(AltiumCtrl.postPosts);
 router.route("/posts/:id")
     .get(AltiumCtrl.getPost);
+router.route("/like")
+    .post(AltiumCtrl.postLike);
 // router.route("/movie/:id").get(AltiumCtrl.apiGetReviews);
 // router.route("/new").post(AltiumCtrl.apiPostReview);
 // router.route("/:id")

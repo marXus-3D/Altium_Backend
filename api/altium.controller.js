@@ -184,4 +184,32 @@ export default class AltiumController{
           res.status(500).json({ error: e.message });
         }
     }
+    static async postLike(req,res,next)
+    {
+        try {
+            console.log(`${req.body.follower_id} Following user ${req.body.following_id}`);
+            const like = {
+                like_id : AltiumController.generateLikeId(), 
+                user_id : req.body.user_id,
+                post_id : req.body.post_id,
+                timestamp : Date.now().toString(), 
+            };
+            let userResponse;
+            const followResponse = await AltiumDAO.addLike(like).then(
+                userResponse = await AltiumDAO.getPost(like.post_id),
+                userResponse.no_like++,
+                AltiumDAO.updatePost(userResponse),
+            );
+          res.status(200).json({ status: "success" });
+          console.log(userResponse);
+        } catch (e) {
+            console.log(e);
+          res.status(500).json({ error: e.message })
+        }
+    }
+    static generateLikeId() {
+      const timestamp = Date.now();
+      const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+      return `like-${timestamp}-${randomPart}`;
+    }
 }

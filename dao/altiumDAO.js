@@ -7,6 +7,7 @@ let users;
 let followers;
 let posts;
 let hashtags;
+let likes;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -18,6 +19,7 @@ export default class AltiumDAO {
         followers = await conn.db("altium").collection("followers");
         posts = await conn.db("altium").collection("posts");
         hashtags = await conn.db("altium").collection("hashtags");
+        likes = await conn.db("altium").collection("likes");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -176,6 +178,35 @@ export default class AltiumDAO {
       }
   }
 
+  static async updatePost (post){
+    try {
+        console.log(`updating post ${post}`);
+
+        const postId = post.post_id;
+        const updateCriteria = { post_id:postId };
+        const updateData = { $set: { 
+                content : post.content,
+                media_type: post.media_type,
+                media_url: post.media_url,
+                timestamp: post.timestamp,
+                no_like : post.no_like,
+                no_comments : post.no_comments,
+        }};
+
+        await posts.updateOne(updateCriteria, updateData).then(updateResult => {
+          if (updateResult.matchedCount === 1) {
+            return updateResult;
+          } else {
+            throw new Error("No post found");
+          }
+        });
+      } catch (e) {
+        console.error(`Unable to post post: ${e}`);
+        //return { error: e };
+        throw e;
+      }
+  }
+
   static extractHashtags(text) {
     //console.log(text);
     const hashtagRegex = /#(\w+)/g;
@@ -190,6 +221,17 @@ export default class AltiumDAO {
     }
   
     return hashtags;
+  }
+
+  static async addLike(like)
+  {
+    try {
+      console.log(`adding like ${like}`);
+      return await likes.insertOne(like);
+    } catch (e) {
+      console.error(`Unable to post like: ${e}`);
+      return { error: e };
+    }
   }
 
 }
