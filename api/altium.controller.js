@@ -248,4 +248,21 @@ export default class AltiumController{
           res.status(500).json({ error: e.message });
         }
     }
+    static async sendMessage (req,res,next) 
+    {
+      try {
+        console.log(`user ${req.body.sender_id} sent user ${req.body.reciever_id} ${req.body.content}`);
+        const message = {
+            sender_id : req.body.sender_id, 
+            reciever_id : req.body.reciever_id,
+            content : req.body.content,
+        };
+        const userResponse = await AltiumDAO.postMessage(message);
+      res.status(200).json({ status: "success" });
+      console.log(userResponse);
+      } catch (e) {
+          console.log(e);
+        res.status(500).json({ error: e.message })
+      }
+    }
 }

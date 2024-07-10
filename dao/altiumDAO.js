@@ -8,6 +8,7 @@ let followers;
 let posts;
 let hashtags;
 let likes;
+let messages;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -20,6 +21,7 @@ export default class AltiumDAO {
         posts = await conn.db("altium").collection("posts");
         hashtags = await conn.db("altium").collection("hashtags");
         likes = await conn.db("altium").collection("likes");
+        messages = await conn.db("altium").collection("messages");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -262,6 +264,17 @@ export default class AltiumDAO {
       console.error(`Unable to delete like: ${e}`);
       throw e;
       // return { error: e };
+    }
+  }
+
+  static async postMessage(message)
+  {
+    try {
+      console.log(`posting message ${message}`);
+      return await messages.insertOne(message);
+    } catch (e) {
+      console.error(`Unable to post message: ${e}`);
+      throw e;
     }
   }
 
