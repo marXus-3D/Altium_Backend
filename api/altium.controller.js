@@ -253,6 +253,7 @@ export default class AltiumController{
       try {
         console.log(`user ${req.body.sender_id} sent user ${req.body.reciever_id} ${req.body.content}`);
         const message = {
+            message_id : AltiumController.generateMsgId(),
             sender_id : req.body.sender_id, 
             reciever_id : req.body.reciever_id,
             content : req.body.content,
@@ -264,5 +265,26 @@ export default class AltiumController{
           console.log(e);
         res.status(500).json({ error: e.message })
       }
+    }
+    static generateMsgId() {
+      const timestamp = Date.now();
+      const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+      return `msg-${timestamp}-${randomPart}`;
+    }
+    static async getMessages(req,res,next)
+    {
+        try {
+            console.log(`getting messages for ${req.body.sender_id} and ${req.body.reciever_id}`);
+
+            const id = {
+              sender_id : req.body.sender_id, 
+              reciever_id : req.body.reciever_id,
+            };
+            const userResponse = await AltiumDAO.getMessages(id);
+
+          res.status(200).json(userResponse);
+        } catch (e) {
+          res.status(500).json({ error: e.message });
+        }
     }
 }

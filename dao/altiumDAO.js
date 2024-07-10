@@ -275,4 +275,24 @@ export default class AltiumDAO {
     }
   }
 
+  static async getMessages(messageFilter)
+  {
+    try {
+      console.log(`getting messeage ${messageFilter} from db`);
+      //const filter = { user_id:userid };
+      const message = await messages.find(messageFilter);
+      const response = await message.toArray();
+
+      if (response) {
+        console.log("Found messages:", response);
+        return response;
+      } else {
+        throw new Error("No messages found with the provided id");
+      }
+    } catch (e) {
+      console.log(`error while getting post ${e.message}`);
+      throw e;
+    }
+  }
+
 }

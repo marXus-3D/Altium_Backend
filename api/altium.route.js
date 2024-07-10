@@ -23,6 +23,7 @@ router.route("/like")
     .delete(AltiumCtrl.deleteLike)
     .post(AltiumCtrl.postLike);
 router.route("/message")
+    .get(AltiumCtrl.getMessages)
     .post(AltiumCtrl.sendMessage);
 // router.route("/movie/:id").get(AltiumCtrl.apiGetReviews);
 // router.route("/new").post(AltiumCtrl.apiPostReview);
