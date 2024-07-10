@@ -33,7 +33,7 @@ export default class AltiumDAO {
         return await users.insertOne(user);
       } catch (e) {
         console.error(`Unable to post review: ${e}`);
-        return { error: e };
+        throw e;
       }
   }
   static async updateUser (user){
@@ -62,7 +62,7 @@ export default class AltiumDAO {
         });
       } catch (e) {
         console.error(`Unable to post review: ${e}`);
-        //return { error: e };
+        //throw e;
         throw e;
       }
   }
@@ -107,7 +107,7 @@ export default class AltiumDAO {
       return await followers.insertOne(followersObj);
     } catch (e) {
       console.error(`Unable to post follower: ${e}`);
-      return { error: e };
+      throw e;
     }
   }
 
@@ -138,7 +138,7 @@ export default class AltiumDAO {
       return await followers.deleteOne(followersObj);
     } catch (e) {
       console.error(`Unable to delete follower: ${e}`);
-      return { error: e };
+      throw e;
     }
   }
 
@@ -195,7 +195,6 @@ export default class AltiumDAO {
       } catch (e) {
         console.error(`Unable to post review: ${e}`);
         throw e;
-        return { error: e };
       }
   }
 
@@ -222,8 +221,7 @@ export default class AltiumDAO {
           }
         });
       } catch (e) {
-        console.error(`Unable to post post: ${e}`);
-        //return { error: e };
+        console.error(`Unable to update post: ${e}`);
         throw e;
       }
   }
@@ -251,7 +249,7 @@ export default class AltiumDAO {
       return await likes.insertOne(like);
     } catch (e) {
       console.error(`Unable to post like: ${e}`);
-      return { error: e };
+      throw e;
     }
   }
 
@@ -263,7 +261,6 @@ export default class AltiumDAO {
     } catch (e) {
       console.error(`Unable to delete like: ${e}`);
       throw e;
-      // return { error: e };
     }
   }
 
