@@ -33,6 +33,13 @@ Endpoints
           </li>
         </ol>
     </li>
+    </li>
+        <li>
+        <ol>/message
+          <li>post - used to post direct messages between users</li>
+          <li>get - used to get all the chat messages between two users</li>
+        </ol>
+    </li>
   </ul>
 <p>All endpoints that don't have an id in their parameter accept data in their body in a json format.
 
