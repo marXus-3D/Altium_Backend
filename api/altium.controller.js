@@ -15,6 +15,7 @@ export default class AltiumController{
                 bio : req.body.bio,
                 profile_picture : req.body.ppic,
                 followers : parseInt(req.body.followers),
+                acc_type : req.body.acc_type,
             };
             const userResponse = await AltiumDAO.addUser(user);
           res.status(200).json({ status: "success" });
@@ -39,6 +40,7 @@ export default class AltiumController{
                 bio : req.body.bio,
                 profile_picture : req.body.ppic,
                 followers : parseInt(req.body.followers),
+                acc_type : req.body.acc_type,
             };
             const userResponse = await AltiumDAO.updateUser(user);
 
