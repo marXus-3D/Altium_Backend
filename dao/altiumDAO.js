@@ -147,7 +147,8 @@ export default class AltiumDAO {
     try {
       console.log(`getting post ${postid} from db`);
       const filter = { post_id:postid };
-      const user = await posts.findOne(filter);
+      const user = await posts.find(filter);
+      const post = user.toArray();
 
       if (user) {
         console.log("Found post:", user);
