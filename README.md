@@ -40,6 +40,12 @@ Endpoints
           <li>get - used to get all the chat messages between two users</li>
         </ol>
     </li>
+    <li>
+        <ol>/group
+          <li>post - used to create groups</li>
+          <li>get - used to get all the members of a group</li>
+        </ol>
+    </li>
   </ul>
 <p>All endpoints that don't have an id in their parameter accept data in their body in a json format.
 
