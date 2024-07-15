@@ -62,13 +62,16 @@
     height: 100vh;
 
     flex: 3;
+    justify-content: center;
+    align-items: center;
   }
 
   .post{
-    margin: 5px 20px;
+    margin: 5px auto;
     border: 1px solid var(--text);
 
     min-height: 300px;
+    max-width: 400px;
 
     padding: 10px;
   }
@@ -98,8 +101,26 @@
   }
   .content{
     padding: 20px 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+  }
+  .content img{
+    padding: auto;
+    max-width: 300px;
+    border-radius: 20px;
   }
   .post_footer{
-    
+
+  }
+  .post_footer input{
+    margin-left: 15px;
+    border: none;
+    color: #008db8;
+
+    cursor: pointer;
   }
   
