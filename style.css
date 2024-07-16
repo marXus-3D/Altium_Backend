@@ -41,6 +41,7 @@
   }
   body {
     display: flex;
+    justify-content: center;
   }
 
   section {
@@ -49,17 +50,20 @@
 
   .leftPanel{
     height: 100vh;
+    max-width: 500px;
 
     flex: 2;
   }
   .rightPanel {
     height: 100vh;
+    max-width: 400px;
     border: none;
 
     flex: 1;
   }
   .centerPanel {
     height: 100vh;
+    max-width: 570px;
 
     flex: 3;
     justify-content: center;

@@ -192,7 +192,8 @@ export default class AltiumController{
             console.log(`getting post by id.... ${req.body.user_id}`);
 
             const id = req.body.user_id;
-            const userResponse = await AltiumDAO.getPostByUser(id);
+            // const userResponse = await AltiumDAO.getPostByUser(id);
+            const userResponse = await AltiumDAO.getPosts();
 
           res.status(200).json(userResponse);
         } catch (e) {
