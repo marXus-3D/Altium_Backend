@@ -159,6 +159,7 @@ export default class AltiumController{
                 timestamp: Date.now().toString(),
                 no_like : 0,
                 no_comments : 0,
+                name: req.body.name,
             };
             console.log(post);
             const followResponse = await AltiumDAO.addPost(post).then(value => { 

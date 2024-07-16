@@ -8,31 +8,54 @@ async function getPosts(){
     const postsContainer = document.getElementById('centerPanel');
 
     posts.forEach(post => {
-        postsContainer.innerHTML += `
-        <div class="post">
-            <div class="profile">
-                <div class="profile_img">
-                     
+        if (post.media_type == "Text") {
+            postsContainer.innerHTML += `
+            <div class="post">
+                <div class="profile">
+                    <div class="profile_img">
+                        
+                    </div>
+                    <div class="name">
+                        <h3>${post.name}<br><span>${formatTime(post.timestamp)}</span></h3>
+                    </div>
                 </div>
-                <div class="name">
-                    <h3>${post.name}<br><span>${formatTime(post.timestamp)}</span></h3>
+                <div class="content">
+                    <p>${post.content}</p>
                 </div>
-            </div>
-            <div class="content">
-                <p>${post.content}</p>
-            </div>
-            <div class="post_footer">
-                <input type="button" value="👍 ${post.no_like}">
-                <input type="button" value="💬 ${post.no_comments}">
-            </div>
-        </div>`;
+                <div class="post_footer">
+                    <input type="button" value="👍 ${post.no_like}">
+                    <input type="button" value="💬 ${post.no_comments}">
+                </div>
+            </div>`;
+        }else {
+            postsContainer.innerHTML += `
+            <div class="post">
+                <div class="profile">
+                    <div class="profile_img">
+                        
+                    </div>
+                    <div class="name">
+                        <h3>${post.name}<br><span>${formatTime(post.timestamp)}</span></h3>
+                    </div>
+                </div>
+                <div class="content">
+                    <p>${post.content}</p>
+                    <img src="${post.media_url}">
+                </div>
+                <div class="post_footer">
+                    <input type="button" value="👍 ${post.no_like}">
+                    <input type="button" value="💬 ${post.no_comments}">
+                </div>
+            </div>`;
+        }
+        
     });
 }
 
 function formatTime(time){
 
 // Create a new Date object with the timestamp
-const date = new Date(time);
+const date = new Date(time * 1000);
 
 // Get hours, minutes, and seconds from the Date object
 let hours = date.getHours();
@@ -46,7 +69,7 @@ hours = hours % 12;
 hours = hours ? hours : 12; // Handle midnight (0 hours)
 
 // Format the time
-const formattedTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}${amOrPm}`;
+const formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}${amOrPm}`;
 return formattedTime;
 }
 
