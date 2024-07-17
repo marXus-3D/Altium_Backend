@@ -142,16 +142,47 @@ export default class AltiumDAO {
     }
   }
 
+  static async getUserAndPostLike(filter)
+  {
+    try {
+      console.log(`getting post and like from db ${filter.user_id}, ${filter.post_id}`);
+      const post = await likes.findOne(filter);
+
+      if (post)
+      {
+        console.log(`Found matching like ${post}`);
+        return true;
+      }
+      else
+      {
+        console.log(`Found no matching like`);
+        return false;
+      }
+    } catch (e) {
+      console.log(`error while getting post and like ${e.message}`);
+      return false;
+    }
+  }
+
   static async getPosts()
   {
     try {
       console.log(`getting postfrom db`);
       const user = await posts.find({});
-      const post = user.toArray();
+      const post = await user.toArray();
+      post.forEach(async element => {
+        const filter = {
+          user_id : element.user_id,
+          post_id : element.post_id,
+        };
+        element.like = await AltiumDAO.getUserAndPostLike(filter);
+      });
 
-      if (post) {
-        console.log("Found post:", post);
-        return post;
+      const finalPosts = await Promise.all(post);
+
+      if (finalPosts) {
+        console.log("Found post:", finalPosts);
+        return finalPosts;
       } else {
         throw new Error("No post found with the provided postid");
       }
