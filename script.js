@@ -23,7 +23,7 @@ async function getPosts(){
                     <p>${post.content}</p>
                 </div>
                 <div class="post_footer">
-                    <input type="button" value="👍 ${post.no_like}">
+                    <input type="button" value="${post.like? '👎':'👍'} ${post.no_like} on">
                     <input type="button" value="💬 ${post.no_comments}">
                 </div>
             </div>`;
@@ -43,7 +43,7 @@ async function getPosts(){
                     <img src="${post.media_url}">
                 </div>
                 <div class="post_footer">
-                    <input type="button" value="👍 ${post.no_like}">
+                    <input type="button" value="${post.like? '👎':'👍'} ${post.no_like}">
                     <input type="button" value="💬 ${post.no_comments}">
                 </div>
             </div>`;

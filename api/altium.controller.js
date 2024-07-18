@@ -204,7 +204,7 @@ export default class AltiumController{
     static async postLike(req,res,next)
     {
         try {
-            console.log(`${req.body.follower_id} Following user ${req.body.following_id}`);
+            console.log(`user ${req.body.user_id} liked post ${req.body.post_id}`);
             const like = {
                 like_id : AltiumController.generateLikeId(), 
                 user_id : req.body.user_id,
@@ -215,7 +215,7 @@ export default class AltiumController{
             const followResponse = await AltiumDAO.addLike(like).then(
                 userResponse = await AltiumDAO.getPost(like.post_id),
                 userResponse.no_like++,
-                AltiumDAO.updatePost(userResponse),
+                await AltiumDAO.updatePost(userResponse),
             );
           res.status(200).json({ status: "success" });
           console.log(userResponse);
