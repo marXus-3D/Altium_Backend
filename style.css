@@ -50,7 +50,7 @@
 
   .leftPanel{
     height: 100vh;
-    max-width: 500px;
+    max-width: 480px;
 
     flex: 2;
   }
@@ -63,11 +63,13 @@
   }
   .centerPanel {
     height: 100vh;
-    max-width: 570px;
+    max-width: 700px;
 
     flex: 3;
     justify-content: center;
     align-items: center;
+    /* overflow: hidden; */
+    overflow-x: scroll;
   }
 
   .post{
@@ -75,7 +77,7 @@
     border: 1px solid var(--text);
 
     min-height: 100px;
-    max-width: 400px;
+    max-width: 500px;
 
     padding: 10px;
   }
