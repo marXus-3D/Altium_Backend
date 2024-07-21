@@ -25,7 +25,7 @@ onAuthStateChanged(auth, user=>{
  
     if (user) {
      console.log('User Logged in');
-    //  closeModal();
+     closeModal();
     }
     else{
      console.log('User not found');
@@ -165,15 +165,6 @@ onAuthStateChanged(auth, user=>{
  });
 
 
-const logout = document.querySelector('.signIn');
-logout.addEventListener('click', e => {
-    localStorage.removeItem('loggedInUserId');
-    signOut(auth)
-    .then(() => {
-        window.location.href = "logout.html";
-    });
-});
-
 function openModal() {
     signUpModal.classList.remove('hidden'); // Remove the hidden class to show the modal
 }
@@ -215,5 +206,14 @@ function subscribe(){
 
         // });
 
+    });
+
+    const logout = document.querySelector('.signIn');
+    logout.addEventListener('click', e => {
+        localStorage.removeItem('loggedInUserId');
+        signOut(auth)
+        .then(() => {
+            window.location.href = "logout.html";
+        });
     });
 }
