@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,6 +16,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth();
 
 
 
@@ -26,12 +27,49 @@ signUpBtn.addEventListener('click', (e) => {
     const email = document.querySelector('.email').value;
     const password = document.querySelector('.password').value;
 
-    const auth = getAuth();
-
-    createUserWithEmailAndPassword(auth, email,password)
+    signInWithEmailAndPassword(auth, email, password)
     .then((userCred) => {
-        const user = userCred.user;
-        console.log(user);
+        console.log(`User logged in ${userCred.user}`);
+        localStorage.setItem('loggedInUserId', userCred.user.uid);
+        window.location.href="";
+    })
+    .catch((err)=>{
+        console.log(err);
+        if(err.code == 'auth/invalid-credential'){
+            console.log('Incorrect Email and Password Combination');
+        }
+        else{
+            console.log('Account does not Exist');
+        }
     });
 
+    // createUserWithEmailAndPassword(auth, email,password)
+    // .then((userCred) => {
+    //     const user = userCred.user;
+    //     console.log(user);
+    // })
+    // .catch((err) => {
+
+    // });
+
+});
+
+const logout = document.querySelector('.signIn');
+logout.addEventListener('click', e => {
+    localStorage.removeItem('loggedInUserId');
+    signOut(auth)
+    .then(() => {
+        window.location.href = "logout.html";
+    });
+});
+
+onAuthStateChanged(auth, user=>{
+   const loggedUserId = localStorage.getItem('loggedInUserId'); 
+
+   if (user) {
+    console.log('User Logged in');
+   }
+   else{
+    console.log('user logged out');
+   }
 });
