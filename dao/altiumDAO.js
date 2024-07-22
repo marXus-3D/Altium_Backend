@@ -67,6 +67,26 @@ export default class AltiumDAO {
       }
   }
 
+  static async getUserWithEmail(email)
+  {
+    try {
+      console.log(`getting user ${email} from db`);
+      console.log(email.toString().length);
+      const filter = { email:email };
+      const user = await users.findOne(filter);
+
+      if (user) {
+        console.log("Found user:", user);
+        return user;
+      } else {
+        throw new Error("No user found with the provided user_id");
+      }
+    } catch (e) {
+      console.log(`error while getting user ${e.message}`);
+      throw e;
+    }
+  }
+
   static async getUser(userid)
   {
     try {
