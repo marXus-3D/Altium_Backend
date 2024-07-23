@@ -56,13 +56,27 @@ export default class AltiumController{
             console.log(`getting user.... ${req.params.id}`);
 
             const id = req.params.id;
-            const userResponse = await AltiumDAO.getUser(id);
 
-          res.status(200).json(userResponse);
+            if(AltiumController.isValidEmail(id))
+            {
+              const userResponse = await AltiumDAO.getUserWithEmail(id);
+              res.status(200).json(userResponse);
+            }else{
+              const userResponse = await AltiumDAO.getUser(id);
+              res.status(200).json(userResponse);
+            }
         } catch (e) {
           res.status(500).json({ error: e.message });
         }
     }
+
+    static isValidEmail(email) {
+      // Regular expression for basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      // Return true if the email matches the regex, false otherwise
+      return emailRegex.test(email);
+  }
 
     static async getUsers(req,res,next){
         try {
@@ -289,4 +303,51 @@ export default class AltiumController{
           res.status(500).json({ error: e.message });
         }
     }
+
+    // static async html(req,res,next)
+    // {
+    //     try {
+    //         console.log(`getting messages for ${req.body.sender_id} and ${req.body.reciever_id}`);
+
+    //         const id = {
+    //           sender_id : req.body.sender_id, 
+    //           reciever_id : req.body.reciever_id,
+    //         };
+    //         const userResponse = `<!DOCTYPE html>
+    //           <html lang="en">
+    //           <head>
+    //               <meta charset="UTF-8">
+    //               <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //               <title>Responsive</title>
+    //               <link rel="stylesheet" href="style.css">
+    //           </head>
+    //           <body>
+    //               <!-- 0-480
+    //                   481-768
+    //                   769-1279
+    //                   1280+  -->
+    //               <!-- <div class="wrapper">
+    //                   <div class="blue">blue</div>
+    //                   <div class="desktop">
+    //                       <div class="green">green</div>
+    //                       <div class="tablet">
+    //                           <div class="red">red</div>
+    //                           <div class="yellow">yellow</div>
+    //                       </div>
+    //                   </div>
+    //               </div> -->
+    //               <div class="wrapper">
+    //                   <div class="blue">blue</div>
+    //                   <div class="green">green</div>
+    //                   <div class="red">red</div>
+    //                   <div class="yellow">yellow</div>
+    //               </div>
+    //           </body>
+    //           </html>`;
+    //       res.setHeader('Content-Type', 'text/html');
+    //       res.status(200).send(userResponse);
+    //     } catch (e) {
+    //       res.status(500).json({ error: e.message });
+    //     }
+    // }
 }

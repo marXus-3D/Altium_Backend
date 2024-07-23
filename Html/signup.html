@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="signup.css">
+    <title>Sign Up</title>
+</head>
+<body>
+    <div class="container">
+        <div class="first-slide" style="display: flex;">
+            <h1>Sign in to Altium</h1>
+            <div class="googleBtn">
+                Google
+            </div>
+            <div class="googleBtn">
+                Apple
+            </div>
+            <div class="divider">
+                <hr> <h3>or</h3> <hr>
+            </div>
+        </div>
+
+        <div class="second-slide" style="display: none;">
+            <h1 style="justify-self: flex-start; align-self: self-start; margin-left: 20%;">Select your Personal Info</h1>
+            <div class="collegeInfo">
+                <label for="collegeSelect">Select your Institution</label>
+                <select id="collegeSelect" class="collegeSelect">
+                    <option>HiLCoE School of Computer Science</option>
+                    <option value="Addis Ababa University">Addis Ababa University</option>
+                </select>
+            </div>
+            <div class="collegeInfo">
+                <label for="occupationSelect">Select your Occupation</label>
+                <select id="occupationSelect" class="occupationSelect" style="width: 30%;">
+                    <option>Teacher</option>
+                    <option>Student</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="collegeInfo">
+                    <label for="fname">First Name</label>
+                    <input type="text" placeholder="First Name" class="fname" id="fname">
+                </div>
+                <div class="collegeInfo">
+                    <label for="lname">Last Name</label>
+                    <input type="text" placeholder="Last Name" class="lname" id="lname">
+                </div>
+            </div>
+        </div>
+
+        <div class="third-slide" style="display: none;">
+            <h1 style="justify-self: flex-start; align-self: self-start; margin-left: 20%;">Create your account</h1>
+            <div class="collegeInfo">
+                <label for="dob">Date of Birth</label>
+                <input type="date" class="dob" id="dob">
+            </div>
+            <div class="collegeInfo">
+                <label for="email">Email</label>
+                <input type="email" placeholder="johndoe@john.doe" class="email" style="width: 80%;">
+            </div>
+            <div class="row">
+                <div class="collegeInfo">
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Password" class="password hidePass">
+                </div>
+                <div class="collegeInfo" style="justify-content: flex-end;">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" placeholder="Confirm Password" class="confirmPassword password hidePass">
+                </div>
+            </div>
+        </div>    
+        
+        <div class="fourth-slide" style="display: none;">
+            <h1 style="justify-self: flex-start; align-self: self-start; margin-left: 20%;">Create your account</h1>
+            <div class="circle_profile">
+                <svg xmlns="http://www.w3.org/2000/svg" height="50%" viewBox="0 -960 960 960" width="50%" fill="var(--accent)"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+            </div>
+            <p style="font-weight: bold; font-size: 16px;">Upload a profile picture <br>
+                <center><span style="font-size: 14px; margin-top: 15px;">Max is 2MB</span></center>
+            </p>
+            <div class="collegeInfo" style="justify-self: center; align-self: center; width: 40%; margin-bottom: 40px;">
+                <label for="bioArea">Bio</label>
+                <textarea name="bioArea" id="bioArea" style="height: 100px;"></textarea>
+            </div>
+        </div>
+
+        <button value="Next" class="nextBtn" id="nextBtn">Sign up with Email</button>
+        <p class="footerLink">Already have an account? <a href="login.html" class="bottomLink">Sign In</a></p>
+    </div>
+    <!-- <script type="module" src="auth.js"> -->
+    <script src="signup.js">
+      </script>
+</body>
+</html>
