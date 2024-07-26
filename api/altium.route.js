@@ -25,11 +25,5 @@ router.route("/like")
 router.route("/message")
     .get(AltiumCtrl.getMessages)
     .post(AltiumCtrl.sendMessage);
-// router.route("/movie/:id").get(AltiumCtrl.apiGetReviews);
-// router.route("/new").post(AltiumCtrl.apiPostReview);
-// router.route("/:id")
-//     .get(AltiumCtrl.apiGetReview)
-//     .put(AltiumCtrl.apiUpdateReview)
-//     .delete(AltiumCtrl.apiDeleteReview)
 
 export default router;

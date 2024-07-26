@@ -14,7 +14,7 @@ export default class AltiumController{
                 l_name : req.body.lname, 
                 bio : req.body.bio,
                 profile_picture : req.body.ppic,
-                followers : parseInt(req.body.followers),
+                followers : 0,
                 acc_type : req.body.acc_type,
             };
             const userResponse = await AltiumDAO.addUser(user);
@@ -148,7 +148,7 @@ export default class AltiumController{
             };
             let userResponse;
             const followResponse = await AltiumDAO.deleteFollowers(followers).then(
-                userResponse = await AltiumDAO.getUser(followers.follower_id),
+                userResponse = await AltiumDAO.getUser(followers.following_id),
                 userResponse.followers--,
                 AltiumDAO.updateUser(userResponse),
             );
