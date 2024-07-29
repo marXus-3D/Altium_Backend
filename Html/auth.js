@@ -1,4 +1,4 @@
-// Import the functions you need from the SDKs you need
+// Only Import the functions we need from the SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import {
   getAuth,
@@ -7,10 +7,9 @@ import {
   onAuthStateChanged,
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+
+//Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDYfBm1bVX-jWuGY1ThG3FgGU3V_QLZB7Q",
   authDomain: "altium-cd024.firebaseapp.com",
@@ -20,7 +19,7 @@ const firebaseConfig = {
   appId: "1:904813905259:web:f1bb555fdb05b18022382e",
 };
 
-// Initialize Firebase
+//Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
