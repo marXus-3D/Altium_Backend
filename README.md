@@ -97,6 +97,9 @@ This is a backend api created using Node JS and Express to query a mongo-DB Data
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `string` | **Required**. user_Id of the user to fetch followers list |
 
+```http
+  GET /api/v1/altium/likes/${id}
+```
 
 
 ## Authors
