@@ -86,6 +86,14 @@ export default class AltiumDAO {
 
       if (user) {
         console.log("Found user:", user);
+        let account;
+        if(user.acc_type == "Student"){
+          account = students.findOne({user_id:user.user_id});
+        }else{
+          account = teachers.findOne({user_id:user.user_id});
+        }
+
+        user.account_Detail = account;
         return user;
       } else {
         throw new Error("No user found with the provided user_id");
