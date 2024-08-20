@@ -9,6 +9,8 @@ let posts;
 let hashtags;
 let likes;
 let messages;
+let students;
+let teachers;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -17,6 +19,8 @@ export default class AltiumDAO {
     }
     try {
         users = await conn.db("altium").collection("users");
+        students = await conn.db("altium").collection("students");
+        teachers = await conn.db("altium").collection("teachers");
         followers = await conn.db("altium").collection("followers");
         posts = await conn.db("altium").collection("posts");
         hashtags = await conn.db("altium").collection("hashtags");
@@ -27,9 +31,14 @@ export default class AltiumDAO {
     }
   }
 
-  static async addUser (user){
+  static async addUser (user, account){
     try {
         console.log(`adding user ${user.username}`);
+        if (user.acc_type == "Student") {
+          await students.insertOne(account);
+        } else {
+          await teachers.insertOne(account);
+        }
         return await users.insertOne(user);
       } catch (e) {
         console.error(`Unable to post review: ${e}`);
