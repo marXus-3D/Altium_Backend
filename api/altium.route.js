@@ -9,13 +9,15 @@ router.route("/users/:id")
 router.route("/users")
     .get(AltiumCtrl.getUsers)
     .post(AltiumCtrl.postUser);
+router.route("/users/:id/posts")
+    .get(AltiumCtrl.getPostByUser);
 router.route("/followers")
     .delete(AltiumCtrl.deleteFollowers)
     .post(AltiumCtrl.postFollower);
 router.route("/followers/:id")
     .get(AltiumCtrl.getFollowers);
 router.route("/posts")
-    .get(AltiumCtrl.getPostByUser)
+    .get(AltiumCtrl.getPostForUser)
     .post(AltiumCtrl.postPosts);
 router.route("/posts/:id")
     .get(AltiumCtrl.getPost);

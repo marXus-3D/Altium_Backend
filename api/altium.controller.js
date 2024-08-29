@@ -15,6 +15,7 @@ export default class AltiumController {
         bio: req.body.bio,
         profile_picture: req.body.ppic,
         followers: 0,
+        following: 0,
         acc_type: req.body.acc_type,
       };
       let account;
@@ -126,11 +127,11 @@ export default class AltiumController {
         follower_id: req.body.follower_id,
         following_id: req.body.following_id,
       };
-      let userResponse;
+      let userResponse, followingUpdate;
       const followResponse = await AltiumDAO.addFollowers(followers).then(
-        (userResponse = await AltiumDAO.getUser(followers.follower_id)),
+        (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers++,
-        AltiumDAO.updateUser(userResponse)
+        AltiumDAO.updateUser(userResponse).then((followingUpdate = await AltiumDAO.getUser(followers.follower_id)), followingUpdate.following++, AltiumDAO.updateUser(followingUpdate))
       );
       res.status(200).json({ status: "success" });
       console.log(userResponse);
@@ -217,9 +218,24 @@ export default class AltiumController {
     try {
       console.log(`getting post by id.... ${req.body.user_id}`);
 
-      const id = req.body.user_id;
+      // const id = req.body.user_id;
+      const id = req.params.id;
       // const userResponse = await AltiumDAO.getPostByUser(id);
-      const userResponse = await AltiumDAO.getPosts();
+      const userResponse = await AltiumDAO.getPosts(id);
+
+      res.status(200).json(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async getPostForUser(req, res, next) {
+    try {
+      console.log(`getting post by id.... ${req.body.user_id}`);
+
+      // const id = req.body.user_id;
+      // const id = req.params.id;
+      // const userResponse = await AltiumDAO.getPostByUser(id);
+      const userResponse = await AltiumDAO.getRecommendationPosts();
 
       res.status(200).json(userResponse);
     } catch (e) {
