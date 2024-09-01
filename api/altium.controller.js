@@ -4,9 +4,9 @@ export default class AltiumController {
   static async postUser(req, res, next) {
     try {
       console.log("Posting user....");
-      const uid = AltiumController.uuidv4();
+      // const uid = AltiumController.uuidv4();
       const user = {
-        user_id: uid,
+        user_id: req.body.user_id,
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
