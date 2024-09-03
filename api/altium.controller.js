@@ -377,4 +377,69 @@ export default class AltiumController {
   //       res.status(500).json({ error: e.message });
   //     }
   // }
+
+
+
+
+  // Messages and chat
+
+
+   addMessage = async (req, res) => {
+    const { chatId, senderId, text } = req.body;
+    const message = new MessageModel({
+      chatId,
+      senderId,
+      text,
+    });
+    try {
+      const result = await message.save();
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };
+  
+   getMessages = async (req, res) => {
+    const { chatId } = req.params;
+    try {
+      const result = await MessageModel.find({ chatId });
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };
+
+   createChat = async (req, res) => {
+    const newChat = new ChatModel({
+      members: [req.body.senderId, req.body.receiverId],
+    });
+    try {
+      const result = await newChat.save();
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };
+  
+   userChats = async (req, res) => {
+    try {
+      const chat = await ChatModel.find({
+        members: { $in: [req.params.userId] },
+      });
+      res.status(200).json(chat);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };
+  
+   findChat = async (req, res) => {
+    try {
+      const chat = await ChatModel.findOne({
+        members: { $all: [req.params.firstId, req.params.secondId] },
+      });
+      res.status(200).json(chat)
+    } catch (error) {
+      res.status(500).json(error)
+    }
+  };
 }
