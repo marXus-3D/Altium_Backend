@@ -28,7 +28,7 @@ export default class AltiumController {
       } else {
         account = {
           user_id: user.user_id,
-          education_level: req.body.education_level,
+          education_level: req.body.education_level,f
         };
       }
 
