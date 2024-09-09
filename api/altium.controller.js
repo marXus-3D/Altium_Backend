@@ -299,6 +299,7 @@ export default class AltiumController {
         sender_id: req.body.sender_id,
         reciever_id: req.body.reciever_id,
         content: req.body.content,
+        timestamp: Date.now().toString(),
       };
       const userResponse = await AltiumDAO.postMessage(message);
       res.status(200).json({ status: "success" });
@@ -315,15 +316,18 @@ export default class AltiumController {
   }
   static async getMessages(req, res, next) {
     try {
-      console.log(
-        `getting messages for ${req.body.sender_id} and ${req.body.reciever_id}`
-      );
-
-      const id = {
-        sender_id: req.body.sender_id,
-        reciever_id: req.body.reciever_id,
+      const senderId = req.query.sender_id;
+      const receiverId = req.query.receiver_id;
+  
+      console.log(`getting messages for ${senderId} and ${receiverId}`);
+  
+      const messageFilter = {
+        $or: [
+          { sender_id: senderId, reciever_id: receiverId },
+          { sender_id: receiverId, reciever_id: senderId }
+        ]
       };
-      const userResponse = await AltiumDAO.getMessages(id);
+      const userResponse = await AltiumDAO.getMessages(messageFilter);
 
       res.status(200).json(userResponse);
     } catch (e) {
