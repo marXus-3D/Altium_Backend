@@ -377,4 +377,47 @@ export default class AltiumController {
   //       res.status(500).json({ error: e.message });
   //     }
   // }
+  static generateCommentId() {
+    const timestamp = Date.now();
+    const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+    return `comment-${timestamp}-${randomPart}`;
+  }
+
+  static async getComments(req, res, next) {
+    try {
+      console.log(`getting comment.... ${req.params.id}`);
+
+      const id = req.params.id;
+      const userResponse = await AltiumDAO.getComments(id);
+
+      res.status(200).json(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static async postComment(req, res, next) {
+    try {
+      console.log(`posting comment.... for ${req.params.id}`);
+
+      const comment = {
+        comment_id: AltiumController.generateCommentId(),
+        user_id: req.body.user_id,
+        post_id: req.params.id,
+        name: req.body.name,
+        content: req.body.content,
+        timestamp: Date.now().toString(),
+      };
+      let userResponse;
+      const commentResponse = await AltiumDAO.addComment(comment).then(
+        (userResponse = await AltiumDAO.getPost(comment.post_id)),
+        userResponse.no_comments++,
+        await AltiumDAO.updatePost(userResponse)
+      );
+      res.status(200).json({ status: "success" });
+      console.log(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }
