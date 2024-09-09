@@ -299,6 +299,7 @@ export default class AltiumController {
         sender_id: req.body.sender_id,
         reciever_id: req.body.reciever_id,
         content: req.body.content,
+        name: req.body.name,
         timestamp: Date.now().toString(),
       };
       const userResponse = await AltiumDAO.postMessage(message);
@@ -317,7 +318,7 @@ export default class AltiumController {
   static async getMessages(req, res, next) {
     try {
       const senderId = req.query.sender_id;
-      const receiverId = req.query.receiver_id;
+      const receiverId = req.query.reciever_id;
   
       console.log(`getting messages for ${senderId} and ${receiverId}`);
   
