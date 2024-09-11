@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Input</title>
+    <link rel="stylesheet" href="grades.css">
+    
+</head>
+<body>
+  <h1>Student Grade Input</h1>
+<div class="container">
+  <div class="search">
+<div class="form">
+    <form id="gradeForm">
+    <label for="studentName">Student Name:</label>
+    <input type="text" id="studentName" name="studentName">
+    <button type="submit">Search</button>  
+</div>
+
+    <div id="gradeInput" style="display: none;">
+      <label for="grade">Grade:</label>
+      <input type="text" id="grade" name="grade">
+      <button type="submit">Submit Grade</button>
+    </div>
+  </form>
+</div>
+<div class="table">
+  <table id="gradeTable">
+    <thead>
+      <tr>
+        <th>Student Name</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+</div>
+</body>
+</html>
+<script src="grade_search.js"></script>
