@@ -1,0 +1,86 @@
+@media (prefers-color-scheme: light) {
+    :root {
+      --text: #02161d;
+      --background: #ecf9fe;
+      --primary: #055676;
+      --secondary: #023140;
+      --accent: #008db8;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #e2f6fd;
+      --background: #010e13;
+      --primary: #89dafa;
+      --secondary: #bfedfd;
+      --accent: #47d4ff;
+    }
+  }
+  
+*{
+    font-family: poppins;
+    background-color: var(--background);
+    color: var(--text);
+    
+}
+h1{
+    display: flex;
+    justify-content: center;
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    height: 100vh;
+    font-size: 1em;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--background);
+  }
+  
+  .search {
+    display: flex;;
+    flex-direction: column;
+    border: 1px solid var(--accent);
+    margin-left: 20px;
+    font-size: 1.5em;
+    padding: 20px;
+    border-radius: 50px;
+
+  }
+  
+  .table {
+    margin-right: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 1.2em;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    border: 1px solid var(--accent);
+  }
+  
+
+  
+  .table td:first-child {
+    text-transform: uppercase;
+  }
+  button {
+    border: 1px solid var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: var(--accent);  
+  }
+.form{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}   
