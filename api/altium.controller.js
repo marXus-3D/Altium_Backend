@@ -299,6 +299,8 @@ export default class AltiumController {
         sender_id: req.body.sender_id,
         reciever_id: req.body.reciever_id,
         content: req.body.content,
+        name: req.body.name,
+        timestamp: Date.now().toString(),
       };
       const userResponse = await AltiumDAO.postMessage(message);
       res.status(200).json({ status: "success" });
@@ -315,15 +317,18 @@ export default class AltiumController {
   }
   static async getMessages(req, res, next) {
     try {
-      console.log(
-        `getting messages for ${req.body.sender_id} and ${req.body.reciever_id}`
-      );
-
-      const id = {
-        sender_id: req.body.sender_id,
-        reciever_id: req.body.reciever_id,
+      const senderId = req.query.sender_id;
+      const receiverId = req.query.reciever_id;
+  
+      console.log(`getting messages for ${senderId} and ${receiverId}`);
+  
+      const messageFilter = {
+        $or: [
+          { sender_id: senderId, reciever_id: receiverId },
+          { sender_id: receiverId, reciever_id: senderId }
+        ]
       };
-      const userResponse = await AltiumDAO.getMessages(id);
+      const userResponse = await AltiumDAO.getMessages(messageFilter);
 
       res.status(200).json(userResponse);
     } catch (e) {
@@ -377,4 +382,47 @@ export default class AltiumController {
   //       res.status(500).json({ error: e.message });
   //     }
   // }
+  static generateCommentId() {
+    const timestamp = Date.now();
+    const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+    return `comment-${timestamp}-${randomPart}`;
+  }
+
+  static async getComments(req, res, next) {
+    try {
+      console.log(`getting comment.... ${req.params.id}`);
+
+      const id = req.params.id;
+      const userResponse = await AltiumDAO.getComments(id);
+
+      res.status(200).json(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static async postComment(req, res, next) {
+    try {
+      console.log(`posting comment.... for ${req.params.id}`);
+
+      const comment = {
+        comment_id: AltiumController.generateCommentId(),
+        user_id: req.body.user_id,
+        post_id: req.params.id,
+        name: req.body.name,
+        content: req.body.content,
+        timestamp: Date.now().toString(),
+      };
+      let userResponse;
+      const commentResponse = await AltiumDAO.addComment(comment).then(
+        (userResponse = await AltiumDAO.getPost(comment.post_id)),
+        userResponse.no_comments++,
+        await AltiumDAO.updatePost(userResponse)
+      );
+      res.status(200).json({ status: "success" });
+      console.log(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }

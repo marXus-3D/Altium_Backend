@@ -11,6 +11,7 @@ let likes;
 let messages;
 let students;
 let teachers;
+let comments;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -26,6 +27,7 @@ export default class AltiumDAO {
         hashtags = await conn.db("altium").collection("hashtags");
         likes = await conn.db("altium").collection("likes");
         messages = await conn.db("altium").collection("messages");
+        comments = await conn.db("altium").collection("comments");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -449,4 +451,34 @@ export default class AltiumDAO {
     }
   }
 
+  static async getComments(postId)
+  {
+    try {
+      console.log(`getting comment for ${postId} from db`);
+      const filter = { post_id:postId };
+      const comment = await comments.find(filter);
+      const response = await comment.toArray();
+
+      if (response) {
+        console.log("Found comments:", response);
+        return response;
+      } else {
+        throw new Error("No post found with the provided postid");
+      }
+    } catch (e) {
+      console.log(`error while getting comments ${e.message}`);
+      throw e;
+    }
+  }
+
+  static async addComment(comment)
+  {
+    try {
+      console.log(`adding comment ${comment}`);
+      return await comments.insertOne(comment);
+    } catch (e) {
+      console.error(`Unable to post comment: ${e}`);
+      throw e;
+    }
+  }
 }

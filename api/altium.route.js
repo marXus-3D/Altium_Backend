@@ -24,7 +24,12 @@ router.route("/posts/:id")
 router.route("/like")
     .delete(AltiumCtrl.deleteLike)
     .post(AltiumCtrl.postLike);
-router.route("/message")
+router.route("/comments/:id")
+    .get(AltiumCtrl.getComments)
+    .post(AltiumCtrl.postComment)
+/* router.route("/message:id")
+    .get() */
+router.route("/messages")
     .get(AltiumCtrl.getMessages)
     .post(AltiumCtrl.sendMessage);
 
