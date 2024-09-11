@@ -16,7 +16,7 @@ gradeForm.addEventListener("submit", (event) => {
     { name: "gringus", grade: 85 },
     { name: "bringus", grade: 92 },
     { name: "Hussein", grade: 69 },
-    { name: "darky", grade: 96 }
+    { name: "darky", grade: 96 },
     
   ];
 
