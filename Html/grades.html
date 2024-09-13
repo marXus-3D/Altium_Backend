@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Input System</title>
+    <link rel="stylesheet" href="grades.css">
+</head>
+<body>
+  <div class="container">
+    <div class="left-column">
+    <h1>Input Grdae</h1>
+    <div>
+        <label for="courseSelect">Select Course:</label>
+        <select id="courseSelect" onchange="loadStudents()">
+          <!--
+           The onchange event will just call the loadStudents() 
+           function to and then it will fill up student on the table data
+            when a course is selected. -->
+            <option value="">Select a Course</option> 
+            <!-- the other options are filled in the JS -->
+        </select>
+    </div>
+
+    <div id="studentsTableContainer" style="display:none;">
+      <!-- it is not displayed but it will appear once a course is selected -->
+        <h2>Students and Grades</h2>
+        <div>
+          <label for="searchInput">Search Student:</label>
+          <input type="text" id="searchInput" onkeyup="searchStudents()" placeholder="Search by name">
+          <!-- so this basically has an event where it calls a function to search the students
+           the idea is it filters and highlights the rows with the prompt thatwe
+           gave it (further on the JS)-->
+      </div>
+    </div>
+    </div>
+    <div class="right">
+      <h1>Students</h1>
+        <form id="gradesForm">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Same as the options the rows are filled in the JS -->
+                </tbody>
+            </table>
+            
+            <button type="button" onclick="submitGrades()">Submit Grades</button>
+            <!-- this button triggers the submitgrades function-->
+        </form>
+    </div>
+  </div>
+
+    <script src="grade_search.js"></script>
+</body>
+</html>

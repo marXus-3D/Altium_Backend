@@ -32,5 +32,9 @@ router.route("/comments/:id")
 router.route("/messages")
     .get(AltiumCtrl.getMessages)
     .post(AltiumCtrl.sendMessage);
+router.route("/events/:id")
+    .get(AltiumCtrl.getEvents);
+router.route("/events")
+    .post(AltiumCtrl.postEvent);
 
 export default router;

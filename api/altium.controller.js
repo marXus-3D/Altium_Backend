@@ -437,4 +437,13 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
+
+  static async getEvents(req, res, next)
+  {
+
+  }
+  static async postEvent(req, res, next)
+  {
+
+  }
 }
