@@ -335,6 +335,18 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
+  static async fetchReceiver(req, res, next)
+  {
+    try{
+     const userId = /*parseInt*/req.params.userId;
+ 
+     const receivers = await AltiumDAO.getReceivers(userId);
+     res.status(200).json(receivers); 
+    }
+    catch (e){
+     res.status(500).json({ error: e.message });
+    }
+ }
 
   // static async html(req,res,next)
   // {
