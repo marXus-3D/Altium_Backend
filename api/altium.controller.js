@@ -1,6 +1,25 @@
 import AltiumDAO from "../dao/altiumDAO.js";
 
 export default class AltiumController {
+
+
+
+  static async postRatings(req, res, next) {
+    try{
+
+
+
+      
+      const userResponse = await AltiumDAO.addUser(user,account);
+      res.status(200).json({ status: "success" });
+      console.log(user);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ error: e.message });
+    }  
+  }
+
+
   static async postUser(req, res, next) {
     try {
       console.log("Posting user....");
@@ -28,7 +47,8 @@ export default class AltiumController {
       } else {
         account = {
           user_id: user.user_id,
-          education_level: req.body.education_level,f
+          education_level: req.body.education_level,
+          ratings: req.body.ratings
         };
       }
 

@@ -32,5 +32,9 @@ router.route("/comments/:id")
 router.route("/messages")
     .get(AltiumCtrl.getMessages)
     .post(AltiumCtrl.sendMessage);
+router.route("/ratings:id")
+    .get(AltiumCtrl.getRatings)
+    .post(AltiumCtrl.postRatings);
 
+    
 export default router;
