@@ -482,7 +482,7 @@ export default class AltiumDAO {
         .project(projection)
         .toArray();
 
-      return receivers; // to return the array of receiverid and name
+      return Array.from(new Map(receivers.map(item => [item.reciever_id, item])).values()); // to return the array of receiverid and name
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;

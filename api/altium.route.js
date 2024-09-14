@@ -27,7 +27,7 @@ router.route("/like")
 router.route("/comments/:id")
     .get(AltiumCtrl.getComments)
     .post(AltiumCtrl.postComment)
-router.route("/message:id")
+router.route("/message/:id")
     .get(AltiumCtrl.fetchReceiver);
 router.route("/messages")
     .get(AltiumCtrl.getMessages)
