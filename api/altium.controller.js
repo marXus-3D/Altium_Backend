@@ -5,20 +5,53 @@ export default class AltiumController {
 
 
   static async postRatings(req, res, next) {
-    try{
+    try {
+      console.log("posting ratings....");
 
+      const user = {
+        user_id: req.params.id,
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        f_name: req.body.fname,
+        l_name: req.body.lname,
+        bio: req.body.bio,
+        profile_picture: req.body.ppic,
+        followers: parseInt(req.body.followers),
+        acc_type: req.body.acc_type,
+        education_level: req.body.education_level,
+        ratings: req.body.ratings,
+      };
 
-
-      
-      const userResponse = await AltiumDAO.addUser(user,account);
-      res.status(200).json({ status: "success" });
+      const userResponse = await AltiumDAO.postRatings(user)
+        .status(200)
+        .json({ status: "success" });
       console.log(user);
     } catch (e) {
       console.log(e);
       res.status(500).json({ error: e.message });
-    }  
+    }
   }
 
+
+
+  static async getRatings(req, res, next) {
+    try {
+      console.log(`getting user ratings.... ${req.params.id}`);
+
+      const id = req.params.id;
+
+      if (AltiumController.isValidEmail(id)) {
+        const userResponse = await AltiumDAO.getUserWithEmail(id);
+        res.status(200).json(userResponse.ratings);
+      } else {
+        const userResponse = await AltiumDAO.getUser(id);
+        res.status(200).json(userResponse.ratings);
+      }
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 
   static async postUser(req, res, next) {
     try {
@@ -48,11 +81,11 @@ export default class AltiumController {
         account = {
           user_id: user.user_id,
           education_level: req.body.education_level,
-          ratings: req.body.ratings
+          ratings: [],
         };
       }
 
-      const userResponse = await AltiumDAO.addUser(user,account);
+      const userResponse = await AltiumDAO.addUser(user, account);
       res.status(200).json({ status: "success" });
       console.log(user);
     } catch (e) {
@@ -151,7 +184,11 @@ export default class AltiumController {
       const followResponse = await AltiumDAO.addFollowers(followers).then(
         (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers++,
-        AltiumDAO.updateUser(userResponse).then((followingUpdate = await AltiumDAO.getUser(followers.follower_id)), followingUpdate.following++, AltiumDAO.updateUser(followingUpdate))
+        AltiumDAO.updateUser(userResponse).then(
+          (followingUpdate = await AltiumDAO.getUser(followers.follower_id)),
+          followingUpdate.following++,
+          AltiumDAO.updateUser(followingUpdate)
+        )
       );
       res.status(200).json({ status: "success" });
       console.log(userResponse);
@@ -339,14 +376,14 @@ export default class AltiumController {
     try {
       const senderId = req.query.sender_id;
       const receiverId = req.query.reciever_id;
-  
+
       console.log(`getting messages for ${senderId} and ${receiverId}`);
-  
+
       const messageFilter = {
         $or: [
           { sender_id: senderId, reciever_id: receiverId },
-          { sender_id: receiverId, reciever_id: senderId }
-        ]
+          { sender_id: receiverId, reciever_id: senderId },
+        ],
       };
       const userResponse = await AltiumDAO.getMessages(messageFilter);
 
