@@ -447,7 +447,16 @@ export default class AltiumController {
     return `event-${timestamp}-${randomPart}`;
   }
 
-  static async getEvents(req, res, next) {}
+  static async getEvents(req, res, next) {
+    try {
+      const eventMonth = req.params.id;
+
+      const receivers = await AltiumDAO.getEvents(eventMonth);
+      res.status(200).json(receivers);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
   static async postEvent(req, res, next) {
     try {
       console.log(`posting event.... for ${req.body}`);

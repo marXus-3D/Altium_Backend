@@ -498,4 +498,18 @@ export default class AltiumDAO {
       throw e;
     }
   }
+
+  static async getEvents(evMonth) {
+    try {
+      const query = { month: evMonth };
+
+      const eventsArr = await events
+        .find(query).toArray();
+
+      return eventsArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
 }
