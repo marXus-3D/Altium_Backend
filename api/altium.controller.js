@@ -28,11 +28,12 @@ export default class AltiumController {
       } else {
         account = {
           user_id: user.user_id,
-          education_level: req.body.education_level,f
+          education_level: req.body.education_level,
+          f,
         };
       }
 
-      const userResponse = await AltiumDAO.addUser(user,account);
+      const userResponse = await AltiumDAO.addUser(user, account);
       res.status(200).json({ status: "success" });
       console.log(user);
     } catch (e) {
@@ -131,7 +132,11 @@ export default class AltiumController {
       const followResponse = await AltiumDAO.addFollowers(followers).then(
         (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers++,
-        AltiumDAO.updateUser(userResponse).then((followingUpdate = await AltiumDAO.getUser(followers.follower_id)), followingUpdate.following++, AltiumDAO.updateUser(followingUpdate))
+        AltiumDAO.updateUser(userResponse).then(
+          (followingUpdate = await AltiumDAO.getUser(followers.follower_id)),
+          followingUpdate.following++,
+          AltiumDAO.updateUser(followingUpdate)
+        )
       );
       res.status(200).json({ status: "success" });
       console.log(userResponse);
@@ -319,14 +324,14 @@ export default class AltiumController {
     try {
       const senderId = req.query.sender_id;
       const receiverId = req.query.reciever_id;
-  
+
       console.log(`getting messages for ${senderId} and ${receiverId}`);
-  
+
       const messageFilter = {
         $or: [
           { sender_id: senderId, reciever_id: receiverId },
-          { sender_id: receiverId, reciever_id: senderId }
-        ]
+          { sender_id: receiverId, reciever_id: senderId },
+        ],
       };
       const userResponse = await AltiumDAO.getMessages(messageFilter);
 
@@ -425,25 +430,40 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
-  static async fetchReceiver(req, res, next)
-  {
-    try{
-     const userId = req.params.id;
- 
-     const receivers = await AltiumDAO.getReceivers(userId);
-     res.status(200).json(receivers); 
-    }
-    catch (e){
-     res.status(500).json({ error: e.message });
-    }
- }
+  static async fetchReceiver(req, res, next) {
+    try {
+      const userId = req.params.id;
 
-  static async getEvents(req, res, next)
-  {
-
+      const receivers = await AltiumDAO.getReceivers(userId);
+      res.status(200).json(receivers);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   }
-  static async postEvent(req, res, next)
-  {
 
+  static generateEventId() {
+    const timestamp = Date.now();
+    const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+    return `event-${timestamp}-${randomPart}`;
+  }
+
+  static async getEvents(req, res, next) {}
+  static async postEvent(req, res, next) {
+    try {
+      console.log(`posting event.... for ${req.body}`);
+
+      const event = {
+        event_Id: AltiumController.generateEventId(),
+        month: req.body.month,
+        day: req.body.day,
+        title: req.body.title,
+        time: req.body.time,
+      };
+      let serverRes = await AltiumDAO.addEvent(event);
+      res.status(200).json({ status: "success" });
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   }
 }
