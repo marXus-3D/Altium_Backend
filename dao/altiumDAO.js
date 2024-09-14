@@ -485,10 +485,10 @@ export default class AltiumDAO {
   static async getReceivers(userId)
 {
     try{
-      const query = { user_id: userId }; // used this query to find documents with the given userid
-      const projection = { receiver_id: 1, name: 1, _id: 0 }; // to select only receiver_id and name
+      const query = { sender_id: userId }; // used this query to find documents with the given userid
+      const projection = { reciever_id: 1, name: 1, _id: 0 }; // to select only receiver_id and name
 
-      const receivers = await collection.find(query).project(projection).toArray();
+      const receivers = await messages.find(query).project(projection).toArray();
 
       return receivers; // to return the array of receiverid and name
     } 
