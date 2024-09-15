@@ -36,5 +36,11 @@ router.route("/events/:id")
     .get(AltiumCtrl.getEvents);
 router.route("/events")
     .post(AltiumCtrl.postEvent);
+router.route("/courses")
+    .get(AltiumCtrl.getCourses)
+    .post(AltiumCtrl.postCourses)
+    .put(AltiumCtrl.putCourses);
+router.route("/courses/:id")
+    .post(AltiumCtrl.postEnrollment);
 
 export default router;

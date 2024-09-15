@@ -13,6 +13,8 @@ let students;
 let teachers;
 let comments;
 let events;
+let courses;
+let enrolled;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -30,6 +32,8 @@ export default class AltiumDAO {
       messages = await conn.db("altium").collection("messages");
       comments = await conn.db("altium").collection("comments");
       events = await conn.db("altium").collection("events");
+      courses = await conn.db("altium").collection("courses");
+      enrolled = await await conn.db("altium").collection("enrolled");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -482,7 +486,9 @@ export default class AltiumDAO {
         .project(projection)
         .toArray();
 
-      return Array.from(new Map(receivers.map(item => [item.reciever_id, item])).values()); // to return the array of receiverid and name
+      return Array.from(
+        new Map(receivers.map((item) => [item.reciever_id, item])).values()
+      ); // to return the array of receiverid and name
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
@@ -503,12 +509,66 @@ export default class AltiumDAO {
     try {
       const query = { month: evMonth };
 
-      const eventsArr = await events
-        .find(query).toArray();
+      const eventsArr = await events.find(query).toArray();
 
       return eventsArr;
     } catch (e) {
       console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async addCourse(course) {
+    try {
+      console.log(`adding course ${course}`);
+      return await courses.insertOne(course);
+    } catch (e) {
+      console.error(`Unable to post course: ${e}`);
+      throw e;
+    }
+  }
+
+  static async getCourses(tid) {
+    try {
+      const query = { tid: tid };
+
+      const coursesArr = await courses.find(query).toArray();
+
+      return coursesArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async updateStudents(students) {
+    try {
+      console.log(`updating students ${students}`);
+      let result;
+      students.forEach(async (e) => {
+        const updateCriteria = { $and: [{ cid: e.cid }, { sid: e.sid }] };
+        const updateData = {
+          $set: {
+            grade: e.grade,
+          },
+        };
+
+        result = await enrolled.updateOne(updateCriteria, updateData);
+      });
+
+      return result;
+    } catch (e) {
+      console.error(`Unable to update post: ${e}`);
+      throw e;
+    }
+  }
+
+  static async addEnrollment(enroll) {
+    try {
+      console.log(`adding enrollment ${enroll}`);
+      return await enrolled.insertOne(enroll);
+    } catch (e) {
+      console.error(`Unable to post enroll: ${e}`);
       throw e;
     }
   }

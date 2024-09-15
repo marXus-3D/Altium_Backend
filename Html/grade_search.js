@@ -2,7 +2,10 @@
 const courses = {
   "Course 1": [
       { id: 1, name: "Tingus" },
-      { id: 2, name: "Pingus" }
+      { id: 2, name: "Pingus" },
+      { id: 2, name: "Abebe" },
+      { id: 2, name: "Abel" },
+      { id: 2, name: "Parrot" }
   ],
   "Course 2": [
       { id: 3, name: "Gringus" },

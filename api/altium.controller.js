@@ -475,4 +475,63 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
+
+  static async getCourses(req, res, next) {
+    try {
+      const tid = req.query.tid;
+
+      const students = await AltiumDAO.getCourses(tid);
+      res.status(200).json(students);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async postCourses(req, res, next) {
+    try {
+      console.log(`posting course.... for ${req.body}`);
+
+      const course = {
+        cid: req.body.cid,
+        tid: req.body.tid,
+      };
+      let serverRes = await AltiumDAO.addCourse(course);
+      res.status(200).json({ status: "success" });
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async putCourses(req, res, next) {
+    try {
+      console.log(`updating student courses.... for ${req.body.students}`);
+
+      const students = req.body.students;/* {
+        cid: req.body.cid,
+        sid: req.body.sid,
+        grade: req.body.grade
+      };*/
+      let serverRes = await AltiumDAO.updateStudents(students);
+      res.status(200).json({ status: "success" });
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static async postEnrollment(req, res, next) {
+    try {
+      console.log(`posting enroll.... for ${req.body}`);
+
+      const course = {
+        cid: req.params.id,
+        sid: req.body.sid,
+        grade: null,
+      };
+      let serverRes = await AltiumDAO.addEnrollment(course);
+      res.status(200).json({ status: "success" });
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }
