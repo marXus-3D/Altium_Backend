@@ -563,6 +563,31 @@ export default class AltiumDAO {
     }
   }
 
+  static async getStudents(cid) {
+    try {
+      const query = { cid: cid };
+
+      const coursesArr = await enrolled.find(query).toArray();
+
+      return coursesArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+  static async getAllCourse() {
+    try {
+      const query = {  };
+
+      const coursesArr = await courses.find(query).toArray();
+
+      return coursesArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
   static async addEnrollment(enroll) {
     try {
       console.log(`adding enrollment ${enroll}`);

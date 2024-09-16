@@ -40,7 +40,10 @@ router.route("/courses")
     .get(AltiumCtrl.getCourses)
     .post(AltiumCtrl.postCourses)
     .put(AltiumCtrl.putCourses);
-router.route("/courses/:id")
+router.route("/enroll/:id")
+    .get(AltiumCtrl.getStudents)
     .post(AltiumCtrl.postEnrollment);
+router.route("/enroll")
+    .get(AltiumCtrl.getAllCourse)
 
 export default router;

@@ -493,6 +493,8 @@ export default class AltiumController {
       const course = {
         cid: req.body.cid,
         tid: req.body.tid,
+        name: req.body.name,
+        desc: req.body.desc,
       };
       let serverRes = await AltiumDAO.addCourse(course);
       res.status(200).json({ status: "success" });
@@ -518,6 +520,27 @@ export default class AltiumController {
     }
   }
 
+  static async getStudents(req, res, next) {
+    try {
+
+      const cid = req.params.id;
+      let serverRes = await AltiumDAO.getStudents(cid);
+      res.status(200).json(serverRes);
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async getAllCourse(req, res, next) {
+    try {
+      let serverRes = await AltiumDAO.getAllCourse();
+      res.status(200).json(serverRes);
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
   static async postEnrollment(req, res, next) {
     try {
       console.log(`posting enroll.... for ${req.body}`);
@@ -525,6 +548,7 @@ export default class AltiumController {
       const course = {
         cid: req.params.id,
         sid: req.body.sid,
+        name: req.body.name,
         grade: null,
       };
       let serverRes = await AltiumDAO.addEnrollment(course);
