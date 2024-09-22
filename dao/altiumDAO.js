@@ -86,6 +86,15 @@ export default class AltiumDAO {
       throw e;
     }
   }
+  static async deleteUser(userId) {
+    try {
+      console.log(`deleteing user ${userId}`);
+      return await users.deleteOne({user_id: userId});
+    } catch (e) {
+      console.error(`Unable to delete user: ${e}`);
+      throw e;
+    }
+  }
 
   static async getUserWithEmail(email) {
     try {

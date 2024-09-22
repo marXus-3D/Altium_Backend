@@ -64,6 +64,18 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
+  static async deleteUser(req, res, next) {
+    try {
+      console.log(
+        `deleting user ${req.params.id}`
+      );
+      const deleteResponse = await AltiumDAO.deleteUser(req.params.id);
+      res.status(200).json({ status: "success" });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ error: e.message });
+    }
+  }
 
   static async getUser(req, res, next) {
     try {
@@ -533,6 +545,7 @@ export default class AltiumController {
   }
   static async getAllCourse(req, res, next) {
     try {
+      const sid = req.query.sid;
       let serverRes = await AltiumDAO.getAllCourse();
       res.status(200).json(serverRes);
       console.log(serverRes);

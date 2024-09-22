@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.route("/users/:id")
     .get(AltiumCtrl.getUser)
-    .put(AltiumCtrl.updateUser);
+    .put(AltiumCtrl.updateUser)
+    .delete(AltiumCtrl.deleteUser);
 router.route("/users")
     .get(AltiumCtrl.getUsers)
     .post(AltiumCtrl.postUser);
@@ -44,6 +45,6 @@ router.route("/enroll/:id")
     .get(AltiumCtrl.getStudents)
     .post(AltiumCtrl.postEnrollment);
 router.route("/enroll")
-    .get(AltiumCtrl.getAllCourse)
+    .get(AltiumCtrl.getAllCourse);
 
 export default router;
