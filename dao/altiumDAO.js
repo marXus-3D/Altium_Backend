@@ -15,6 +15,7 @@ let comments;
 let events;
 let courses;
 let enrolled;
+let notifications;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -34,6 +35,7 @@ export default class AltiumDAO {
       events = await conn.db("altium").collection("events");
       courses = await conn.db("altium").collection("courses");
       enrolled = await await conn.db("altium").collection("enrolled");
+      notifications = await await conn.db("altium").collection("notifications");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -596,6 +598,18 @@ export default class AltiumDAO {
       throw e;
     }
   }
+  static async getOneCourse(cid) {
+    try {
+      const query = { cid:cid };
+
+      const coursesArr = await courses.findOne(query);
+
+      return coursesArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
 
   static async addEnrollment(enroll) {
     try {
@@ -603,6 +617,29 @@ export default class AltiumDAO {
       return await enrolled.insertOne(enroll);
     } catch (e) {
       console.error(`Unable to post enroll: ${e}`);
+      throw e;
+    }
+  }
+
+  static async getNotificatios(uid) {
+    try {
+      const query = { user_id: uid };
+
+      const coursesArr = await notifications.find(query).toArray();
+
+      return coursesArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async addNotification(notification) {
+    try {
+      console.log(`adding notification ${notification}`);
+      return await notifications.insertOne(notification);
+    } catch (e) {
+      console.error(`Unable to post notification: ${e}`);
       throw e;
     }
   }

@@ -66,9 +66,7 @@ export default class AltiumController {
   }
   static async deleteUser(req, res, next) {
     try {
-      console.log(
-        `deleting user ${req.params.id}`
-      );
+      console.log(`deleting user ${req.params.id}`);
       const deleteResponse = await AltiumDAO.deleteUser(req.params.id);
       res.status(200).json({ status: "success" });
     } catch (e) {
@@ -519,11 +517,21 @@ export default class AltiumController {
     try {
       console.log(`updating student courses.... for ${req.body.students}`);
 
-      const students = req.body.students;/* {
+      const students = req.body.students; /* {
         cid: req.body.cid,
         sid: req.body.sid,
         grade: req.body.grade
       };*/
+      students.forEach(async (stu) => {
+        const notification = {
+          user_id: stu.sid,
+          content: `Your grade for ${stu.cid} has been submitted you can check it here.`,
+          link: `/course/${stu.cid}/${stu.sid}`,
+          hasRead: false,
+        };
+
+        await AltiumDAO.addNotification(notification);
+      });
       let serverRes = await AltiumDAO.updateStudents(students);
       res.status(200).json({ status: "success" });
       console.log(serverRes);
@@ -534,7 +542,6 @@ export default class AltiumController {
 
   static async getStudents(req, res, next) {
     try {
-
       const cid = req.params.id;
       let serverRes = await AltiumDAO.getStudents(cid);
       res.status(200).json(serverRes);
@@ -564,8 +571,27 @@ export default class AltiumController {
         name: req.body.name,
         grade: null,
       };
+      const teacher = await AltiumDAO.getOneCourse(course.cid).tid;
+      const notification = {
+        user_id: teacher,
+        content: `Student ${name} has enrolled in a course you teach ${cid}.`,
+        link: `/users/${cid}`,
+        hasRead: false,
+      };
       let serverRes = await AltiumDAO.addEnrollment(course);
+      await AltiumDAO.addNotification(notification);
       res.status(200).json({ status: "success" });
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static async getNotifications(req, res, next) {
+    try {
+      const uid = req.params.id;
+      let serverRes = await AltiumDAO.getNotificatios(uid);
+      res.status(200).json(serverRes);
       console.log(serverRes);
     } catch (e) {
       res.status(500).json({ error: e.message });
