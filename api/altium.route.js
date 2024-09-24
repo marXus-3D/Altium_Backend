@@ -48,5 +48,6 @@ router.route("/enroll")
     .get(AltiumCtrl.getAllCourse);
 router.route("/notification/:id")
     .get(AltiumCtrl.getNotifications)
+    .put(AltiumCtrl.putNotifications);
 
 export default router;

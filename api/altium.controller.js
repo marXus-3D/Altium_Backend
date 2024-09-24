@@ -597,4 +597,18 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
+
+  static async putNotifications(req, res, next) {
+    try {
+      console.log(`updating notifications for ${req.params.id}`);
+
+      const uid = req.params.id;
+
+      let serverRes = await AltiumDAO.updateNotification(uid);
+      res.status(200).json({ status: "success" });
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }

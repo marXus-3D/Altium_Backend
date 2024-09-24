@@ -643,4 +643,15 @@ export default class AltiumDAO {
       throw e;
     }
   }
+
+  static async updateNotification(uid) {
+    try {
+        const result = await notifications.updateMany({ user_id: uid }, { $set: { hasRead: true } });
+
+      return result;
+    } catch (e) {
+      console.error(`Unable to update notification: ${e}`);
+      throw e;
+    }
+  }
 }
