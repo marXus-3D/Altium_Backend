@@ -49,5 +49,6 @@ router.route("/enroll")
 router.route("/notification/:id")
     .get(AltiumCtrl.getNotifications)
     .put(AltiumCtrl.putNotifications);
-
+router.route("/search")
+    .get(AltiumCtrl.searchPost)
 export default router;

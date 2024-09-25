@@ -91,7 +91,7 @@ export default class AltiumDAO {
   static async deleteUser(userId) {
     try {
       console.log(`deleteing user ${userId}`);
-      return await users.deleteOne({user_id: userId});
+      return await users.deleteOne({ user_id: userId });
     } catch (e) {
       console.error(`Unable to delete user: ${e}`);
       throw e;
@@ -588,7 +588,7 @@ export default class AltiumDAO {
   }
   static async getAllCourse() {
     try {
-      const query = {  };
+      const query = {};
 
       const coursesArr = await courses.find(query).toArray();
 
@@ -600,7 +600,7 @@ export default class AltiumDAO {
   }
   static async getOneCourse(cid) {
     try {
-      const query = { cid:cid };
+      const query = { cid: cid };
 
       const coursesArr = await courses.findOne(query);
 
@@ -646,11 +646,48 @@ export default class AltiumDAO {
 
   static async updateNotification(uid) {
     try {
-        const result = await notifications.updateMany({ user_id: uid }, { $set: { hasRead: true } });
+      const result = await notifications.updateMany(
+        { user_id: uid },
+        { $set: { hasRead: true } }
+      );
 
       return result;
     } catch (e) {
       console.error(`Unable to update notification: ${e}`);
+      throw e;
+    }
+  }
+
+  static async search(srchTerm) {
+    try {
+      const query = [
+        {
+          $search: {
+            index: "default",
+            autocomplete: {
+              query: srchTerm,
+              path: "content",
+            },
+          },
+        },
+      ];
+      // OMG Mongodb's documentation is literally the worst doc i've ever seen.
+      // const agg = [
+      //   {
+      //     $search: {
+      //       index: "default",
+      //       autocomplete: { query: srchTerm, path: "content" },
+      //     },
+      //   },
+      //   { $limit: 20 },
+      //   { $project: { _id: 0, content: 1 } },
+      // ];
+
+      const coursesArr = await posts.aggregate(query).toArray();
+
+      return coursesArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
       throw e;
     }
   }
