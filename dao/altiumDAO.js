@@ -691,4 +691,27 @@ export default class AltiumDAO {
       throw e;
     }
   }
+
+  static async searchByUsername(srchTerm) {
+    try {
+      const query = [
+        {
+          $search: {
+            index: "usernameI",
+            autocomplete: {
+              query: srchTerm,
+              path: "username",
+            },
+          },
+        },
+      ];
+
+      const usersArr = await users.aggregate(query).toArray();
+
+      return usersArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
 }

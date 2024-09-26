@@ -50,5 +50,7 @@ router.route("/notification/:id")
     .get(AltiumCtrl.getNotifications)
     .put(AltiumCtrl.putNotifications);
 router.route("/search")
-    .get(AltiumCtrl.searchPost)
+    .get(AltiumCtrl.searchPost);
+router.route("/username")
+    .get(AltiumCtrl.searchUsername);
 export default router;
