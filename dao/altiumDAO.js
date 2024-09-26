@@ -658,6 +658,12 @@ export default class AltiumDAO {
     }
   }
 
+  static insertArrayInMiddle(a1, a2) {
+    const middleIndex = Math.floor(a1.length / 2);
+    const result = [...a1.slice(0, middleIndex), ...a2, ...a1.slice(middleIndex)];
+    return result;
+  }
+
   static async search(srchTerm) {
     try {
       const query = [
@@ -683,9 +689,9 @@ export default class AltiumDAO {
       //   { $project: { _id: 0, content: 1 } },
       // ];
 
-      const coursesArr = await posts.aggregate(query).toArray();
+      const postsArr = await posts.aggregate(query).toArray();
 
-      return coursesArr;
+      return postsArr;
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
