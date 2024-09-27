@@ -53,4 +53,6 @@ router.route("/search")
     .get(AltiumCtrl.searchPost);
 router.route("/username")
     .get(AltiumCtrl.searchUsername);
+router.route("/trending")
+    .get(AltiumCtrl.getTrends);
 export default router;

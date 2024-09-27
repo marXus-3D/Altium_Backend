@@ -641,4 +641,16 @@ export default class AltiumController {
       res.status(500).json({ error: e.message });
     }
   }
+  static async getTrends(req, res, next) {
+    try {
+      console.log(`getting all trends`);
+      const userResponse = await AltiumDAO.getTrending();
+
+      console.log(userResponse);
+
+      res.status(200).json(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }

@@ -1,7 +1,8 @@
 import { Console, error } from "console";
 import mongodb, { Timestamp } from "mongodb";
 import AltiumController from "../api/altium.controller.js";
-const ObjectId = mongodb.ObjectId;
+// const ObjectId = mongodb.ObjectId;
+import { ObjectId } from "mongodb";
 
 let users;
 let followers;
@@ -345,14 +346,16 @@ export default class AltiumDAO {
     }
   }
 
+  //I swear mongo what are you doing fix your fucking doc's
   static async addPost(post) {
     try {
       console.log(`Posting ${post}`);
       const hashtag = AltiumDAO.extractHashtags(post.content);
+
       for (const hash of hashtag) {
         const newDoc = {
           tag: hash,
-          timestamp: post.timestamp,
+          timestamp: new Date(), //why is it this hard to implement a queryable timestamp
         };
         await hashtags.insertOne(newDoc);
       }
@@ -660,7 +663,11 @@ export default class AltiumDAO {
 
   static insertArrayInMiddle(a1, a2) {
     const middleIndex = Math.floor(a1.length / 2);
-    const result = [...a1.slice(0, middleIndex), ...a2, ...a1.slice(middleIndex)];
+    const result = [
+      ...a1.slice(0, middleIndex),
+      ...a2,
+      ...a1.slice(middleIndex),
+    ];
     return result;
   }
 
@@ -715,6 +722,27 @@ export default class AltiumDAO {
       const usersArr = await users.aggregate(query).toArray();
 
       return usersArr;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async getTrending() {
+    try {
+      const now = new Date();
+      const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
+
+      const query = {
+        timestamp: {
+          $gte: lastWeek,
+          $lte: new Date(),
+        },
+      };
+
+      const trendArr = await hashtags.find(query).toArray();
+
+      return trendArr;
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
