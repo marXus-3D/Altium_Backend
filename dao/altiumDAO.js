@@ -352,10 +352,11 @@ export default class AltiumDAO {
       console.log(`Posting ${post}`);
       const hashtag = AltiumDAO.extractHashtags(post.content);
 
+      const tim =  new Date();
       for (const hash of hashtag) {
         const newDoc = {
           tag: hash,
-          timestamp: new Date(), //why is it this hard to implement a queryable timestamp
+          timestamp: tim, //why is it this hard to implement a queryable timestamp
         };
         await hashtags.insertOne(newDoc);
       }
