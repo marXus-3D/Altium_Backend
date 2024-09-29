@@ -245,12 +245,12 @@ export default class AltiumController {
   }
   static async getPostForUser(req, res, next) {
     try {
-      console.log(`getting post by id.... ${req.body.user_id}`);
+      console.log(`getting post by id.... ${req.query.userId}`);
 
-      // const id = req.body.user_id;
+      const id = req.query.userId;
       // const id = req.params.id;
       // const userResponse = await AltiumDAO.getPostByUser(id);
-      const userResponse = await AltiumDAO.getRecommendationPosts();
+      const userResponse = await AltiumDAO.getRecommendationPosts(id);
 
       res.status(200).json(userResponse);
     } catch (e) {
@@ -295,8 +295,8 @@ export default class AltiumController {
       const followResponse = await AltiumDAO.deleteLike(like).then(
         (userResponse = await AltiumDAO.getPost(like.post_id)),
         userResponse.no_like--,
-        AltiumDAO.updatePost(userResponse)
       );
+      await AltiumDAO.updatePost(userResponse);
       res.status(200).json({ status: "success" });
       console.log(userResponse);
     } catch (e) {

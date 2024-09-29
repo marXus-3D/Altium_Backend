@@ -255,31 +255,32 @@ export default class AltiumDAO {
       throw e;
     }
   }
-  static async getRecommendationPosts() {
+  static async getRecommendationPosts(id) {
     try {
       console.log(`getting postfrom db`);
-      const user = await posts.find({});
+      const user = await posts.find({ user_id: { $ne: id } }).sort({ timestamp: -1 });
       const post = await user.toArray();
 
-      post.forEach(async (element) => {
-        const filter = {
-          user_id: element.user_id,
-          post_id: element.post_id,
-        };
-        element.like = await AltiumDAO.getUserAndPostLike(filter);
-      });
+      // post.forEach(async (element) => {
+      //   const filter = {
+      //     user_id: element.user_id,
+      //     post_id: element.post_id,
+      //   };
+      //   element.like = await AltiumDAO.getUserAndPostLike(filter);
+      // });
 
       const finalPosts = post.map(async (element) => {
         const filter = {
-          user_id: element.user_id,
+          user_id: id,
           post_id: element.post_id,
         };
         const like = await AltiumDAO.getUserAndPostLike(filter);
+        console.warn("this like is", like);
         element.like = like; // Assuming like is a boolean or object
         return element;
       });
 
-      const finalPost = await Promise.all(finalPosts);
+      const finalPost = (await Promise.all(finalPosts)).sort();
       if (finalPost.length > 0) {
         console.log("Found post:", finalPost);
         return finalPost;
