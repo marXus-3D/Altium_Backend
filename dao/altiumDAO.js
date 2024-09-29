@@ -730,6 +730,25 @@ export default class AltiumDAO {
     }
   }
 
+  static async groupHashtags(hashtags) {
+    const hashtagCounts = [];
+  
+    hashtags.forEach((hashtag, index) => {
+      let occurrence = 1;
+      hashtags.forEach((tag, idx) => {
+        if(idx != index && tag.tag.includes(hashtag.tag))
+          {
+            occurrence++;
+            hashtags.splice(idx, 1);
+          }
+      });
+      hashtags[index].totalPosts = occurrence;
+      hashtagCounts.push(occurrence);
+    });
+  
+    return hashtags;
+  }
+
   static async getTrending() {
     try {
       const now = new Date();
@@ -742,9 +761,9 @@ export default class AltiumDAO {
         },
       };
 
-      const trendArr = await hashtags.find(query).toArray();
+      const trendArr = await hashtags.find(query).sort({ timestamp: -1 }).toArray();
 
-      return trendArr;
+      return AltiumDAO.groupHashtags(trendArr);
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
