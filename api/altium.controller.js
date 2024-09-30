@@ -103,10 +103,16 @@ export default class AltiumController {
 
   static async getUsers(req, res, next) {
     try {
-      console.log(`getting users....`);
-      const userResponse = await AltiumDAO.getUsers();
+      if (req.query.userId) {
+        const userId = req.query.userId;
+        const serverResponse = await AltiumDAO.getUsersRecommendation(userId);
 
-      res.status(200).json(userResponse);
+        res.status(200).json(serverResponse);
+      } else {
+        console.log(`getting users....`);
+        const userResponse = await AltiumDAO.getUsers();
+        res.status(200).json(userResponse);
+      }
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
@@ -294,7 +300,7 @@ export default class AltiumController {
       let userResponse;
       const followResponse = await AltiumDAO.deleteLike(like).then(
         (userResponse = await AltiumDAO.getPost(like.post_id)),
-        userResponse.no_like--,
+        userResponse.no_like--
       );
       await AltiumDAO.updatePost(userResponse);
       res.status(200).json({ status: "success" });

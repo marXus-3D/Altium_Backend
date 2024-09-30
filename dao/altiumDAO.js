@@ -3,6 +3,7 @@ import mongodb, { Timestamp } from "mongodb";
 import AltiumController from "../api/altium.controller.js";
 // const ObjectId = mongodb.ObjectId;
 import { ObjectId } from "mongodb";
+import { createArrayWithLimit, shuffleArray } from "../functions.js";
 
 let users;
 let followers;
@@ -160,6 +161,92 @@ export default class AltiumDAO {
     }
   }
 
+  static async getUsersRecommendation(id) {
+    try {
+      console.warn("getting recommendation");
+      const enrolledArr = await enrolled.find({ sid: id }).toArray();
+      const usersArr = await users
+        .find({ user_id: { $ne: id } })
+        .sort({ timestamp: -1 })
+        .limit(10)
+        .toArray();
+      const followingArr = await followers
+        .find({
+          $or: [
+            { following_id: id },
+            {
+              follower_id: id,
+            },
+          ],
+        })
+        .toArray();
+      console.warn(
+        `Got something `,
+        enrolledArr.length,
+        usersArr.length,
+        followingArr.length
+      );
+      if (enrolledArr.length <= 0 && followingArr.length <= 0) {
+        return usersArr;
+      } else {
+        const eId = enrolledArr.map((e) => e.cid);
+        const fId = followingArr.flatMap((e) => [
+          e.follower_id,
+          e.following_id,
+        ]);
+        const studentsEnrrolled = await enrolled
+          .find({ $and: [{ sid: { $ne: id } }, { cid: { $in: eId } }] })
+          .toArray();
+
+        const followersArr = await followers
+          .find({
+            $or: [
+              {
+                $and: [
+                  { following_id: { $in: fId } },
+                  { follower_id: { $ne: id } },
+                ],
+              },
+              {
+                $and: [
+                  { follower_id: { $in: fId } },
+                  { following_id: { $ne: id } },
+                ],
+              },
+            ],
+          })
+          .toArray();
+
+        console.warn("Enrolled ", studentsEnrrolled);
+        console.warn("Followers", followersArr);
+        console.warn("users", usersArr);
+        const fUsers = new Set();
+
+        usersArr.forEach((usr) => {
+          studentsEnrrolled.forEach((stu, idx) => {
+            if (usr.user_id != stu.sid) fUsers.add(stu.sid);
+          });
+          followersArr.forEach((stu) => {
+            if (usr.user_id != stu.following_id) fUsers.add(stu.following_id);
+            else if (usr.user_id != stu.follower_id)
+              fUsers.add(stu.follower_id);
+          });
+        });
+        const recommendationArr = await users
+          .find({ user_id: { $in: Array.from(fUsers) } })
+          .toArray();
+
+        const newArr = shuffleArray([...recommendationArr, ...usersArr]);
+        console.error("this is the new", newArr);
+
+        return newArr;
+      }
+    } catch (e) {
+      console.log(`error while getting user ${e.message}`);
+      throw e;
+    }
+  }
+
   static async addFollowers(followersObj) {
     try {
       console.log(`adding followers ${followersObj}`);
@@ -258,7 +345,9 @@ export default class AltiumDAO {
   static async getRecommendationPosts(id) {
     try {
       console.log(`getting postfrom db`);
-      const user = await posts.find({ user_id: { $ne: id } }).sort({ timestamp: -1 });
+      const user = await posts
+        .find({ user_id: { $ne: id } })
+        .sort({ timestamp: -1 });
       const post = await user.toArray();
 
       // post.forEach(async (element) => {
@@ -353,7 +442,7 @@ export default class AltiumDAO {
       console.log(`Posting ${post}`);
       const hashtag = AltiumDAO.extractHashtags(post.content);
 
-      const tim =  new Date();
+      const tim = new Date();
       for (const hash of hashtag) {
         const newDoc = {
           tag: hash,
@@ -732,20 +821,19 @@ export default class AltiumDAO {
 
   static async groupHashtags(hashtags) {
     const hashtagCounts = [];
-  
+
     hashtags.forEach((hashtag, index) => {
       let occurrence = 1;
       hashtags.forEach((tag, idx) => {
-        if(idx != index && tag.tag.includes(hashtag.tag))
-          {
-            occurrence++;
-            hashtags.splice(idx, 1);
-          }
+        if (idx != index && tag.tag.includes(hashtag.tag)) {
+          occurrence++;
+          hashtags.splice(idx, 1);
+        }
       });
       hashtags[index].totalPosts = occurrence;
       hashtagCounts.push(occurrence);
     });
-  
+
     return hashtags;
   }
 
@@ -761,7 +849,10 @@ export default class AltiumDAO {
         },
       };
 
-      const trendArr = await hashtags.find(query).sort({ timestamp: -1 }).toArray();
+      const trendArr = await hashtags
+        .find(query)
+        .sort({ timestamp: -1 })
+        .toArray();
 
       return AltiumDAO.groupHashtags(trendArr);
     } catch (e) {
