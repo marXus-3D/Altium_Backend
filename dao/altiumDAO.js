@@ -186,6 +186,7 @@ export default class AltiumDAO {
         usersArr.length,
         followingArr.length
       );
+      
       if (enrolledArr.length <= 0 && followingArr.length <= 0) {
         return usersArr;
       } else {
@@ -583,17 +584,25 @@ export default class AltiumDAO {
 
   static async getReceivers(userId) {
     try {
-      const query = { sender_id: userId }; // used this query to find documents with the given userid
+      const query = { $or: [{sender_id: userId}, {reciever_id: userId}] }; // used this query to find documents with the given userid
       const projection = { reciever_id: 1, name: 1, _id: 0 }; // to select only receiver_id and name
-
+      //TODO Fixx this shit
       const receivers = await messages
         .find(query)
         .project(projection)
         .toArray();
 
-      return Array.from(
+      const newArr =  Array.from(
         new Map(receivers.map((item) => [item.reciever_id, item])).values()
-      ); // to return the array of receiverid and name
+      );
+
+      const rec = newArr.map(r => r.reciever_id);
+
+      const usersArr = users.find({user_id: {$in: rec}}).toArray();
+
+      return usersArr; // to return the array of receiverid and name
+
+
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
