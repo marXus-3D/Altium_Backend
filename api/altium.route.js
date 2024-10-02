@@ -55,5 +55,7 @@ router.route("/username")
     .get(AltiumCtrl.searchUsername);
 router.route("/trending")
     .get(AltiumCtrl.getTrends);
-
+router.route("/assigment")
+    .get(AltiumCtrl.getAssigment)
+    .post(AltiumCtrl.postAssigment);
 export default router;

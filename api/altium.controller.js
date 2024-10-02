@@ -1,4 +1,5 @@
 import AltiumDAO from "../dao/altiumDAO.js";
+import { generateAssigmentId } from "../functions.js";
 
 export default class AltiumController {
   static async postUser(req, res, next) {
@@ -655,6 +656,63 @@ export default class AltiumController {
       console.log(userResponse);
 
       res.status(200).json(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async postAssigment(req, res, next) {
+    try {
+      console.log(`posting assigment .... for ${req.body.cid}`);
+
+      if (!req.query.sid) {
+        const course = {
+          aid: generateAssigmentId(),
+          cid: req.body.cid,
+          deadline: new Date(req.body.deadline),
+          timestamp: new Date(),
+          title: req.body.title,
+          description: req.body.desc,
+        };
+        const students = await AltiumDAO.getStudents(course.cid);
+        let serverRes = await AltiumDAO.addAssigment(course);
+
+        students.forEach(async (stu) => {
+          const notification = {
+            user_id: stu.sid,
+            content: `A new assigment has been posted for ${course.cid} that has to be submitted by ${course.deadline}.`,
+            link: `/assigment/${course.cid}`,
+            hasRead: false,
+          };
+
+          await AltiumDAO.addNotification(notification);
+        });
+
+        res.status(200).json({ status: "success" });
+        console.log(serverRes);
+      }else {
+        const submission = {
+          aid: req.body.aid,
+          url: req.body.url,
+          sid: req.query.sid,
+          name: req.body.name,
+          timestamp: new Date(),
+        };
+        let serverRes = await AltiumDAO.addSubmission(submission);
+
+        res.status(200).json({ status: "success" });
+        console.log(serverRes);
+      }
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async getAssigment(req, res, next) {
+    try {
+      const sid = req.query.sid;
+      const cid = req.query.cid;
+      let serverRes = await AltiumDAO.getAssigments(sid, cid);
+      res.status(200).json(serverRes);
+      console.log(serverRes);
     } catch (e) {
       res.status(500).json({ error: e.message });
     }

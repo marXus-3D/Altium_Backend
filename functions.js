@@ -54,3 +54,11 @@ function createArrayWithLimit(array1, array2, array3) {
 }
 
 export  {createArrayWithLimit};
+
+function generateAssigmentId() {
+    const timestamp = Date.now();
+    const randomPart = Math.floor(Math.random() * 1000000); // More random digits
+    return `assigment-${timestamp}-${randomPart}`;
+  }
+
+export {generateAssigmentId};

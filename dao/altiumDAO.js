@@ -18,6 +18,8 @@ let events;
 let courses;
 let enrolled;
 let notifications;
+let assigments;
+let submissions;
 
 export default class AltiumDAO {
   static async injectDB(conn) {
@@ -38,6 +40,8 @@ export default class AltiumDAO {
       courses = await conn.db("altium").collection("courses");
       enrolled = await await conn.db("altium").collection("enrolled");
       notifications = await await conn.db("altium").collection("notifications");
+      assigments = await await conn.db("altium").collection("assigments");
+      submissions = await await conn.db("altium").collection("submissions");
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`);
     }
@@ -186,7 +190,7 @@ export default class AltiumDAO {
         usersArr.length,
         followingArr.length
       );
-      
+
       if (enrolledArr.length <= 0 && followingArr.length <= 0) {
         return usersArr;
       } else {
@@ -584,7 +588,7 @@ export default class AltiumDAO {
 
   static async getReceivers(userId) {
     try {
-      const query = { $or: [{sender_id: userId}, {reciever_id: userId}] }; // used this query to find documents with the given userid
+      const query = { $or: [{ sender_id: userId }, { reciever_id: userId }] }; // used this query to find documents with the given userid
       const projection = { reciever_id: 1, name: 1, _id: 0 }; // to select only receiver_id and name
       //TODO Fixx this shit
       const receivers = await messages
@@ -592,17 +596,15 @@ export default class AltiumDAO {
         .project(projection)
         .toArray();
 
-      const newArr =  Array.from(
+      const newArr = Array.from(
         new Map(receivers.map((item) => [item.reciever_id, item])).values()
       );
 
-      const rec = newArr.map(r => r.reciever_id);
+      const rec = newArr.map((r) => r.reciever_id);
 
-      const usersArr = users.find({user_id: {$in: rec}}).toArray();
+      const usersArr = users.find({ user_id: { $in: rec } }).toArray();
 
       return usersArr; // to return the array of receiverid and name
-
-
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
@@ -739,6 +741,10 @@ export default class AltiumDAO {
 
   static async addNotification(notification) {
     try {
+      notification = {
+        ...notification,
+        ...{ timestamp: new Date() },
+      };
       console.log(`adding notification ${notification}`);
       return await notifications.insertOne(notification);
     } catch (e) {
@@ -864,6 +870,49 @@ export default class AltiumDAO {
         .toArray();
 
       return AltiumDAO.groupHashtags(trendArr);
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async addAssigment(assigment) {
+    try {
+      console.log(`adding assigment ${assigment}`);
+      return await assigments.insertOne(assigment);
+    } catch (e) {
+      console.error(`Unable to post assigment: ${e}`);
+      throw e;
+    }
+  }
+  static async addSubmission(submission) {
+    try {
+      console.log(`adding submission ${submission}`);
+      return await submissions.insertOne(submission);
+    } catch (e) {
+      console.error(`Unable to post submission: ${e}`);
+      throw e;
+    }
+  }
+
+  static async getAssigments(sid, cid) {
+    try {
+      const query = { cid: cid };
+
+      const coursesArr = await assigments
+        .find(query)
+        .sort({ timestamp: -1 })
+        .toArray();
+      const assigmentArr = coursesArr.map((e) => e.aid);
+      const sub = await submissions
+        .find({ aid: { $in: assigmentArr } })
+        .sort({ timestamp: -1 })
+        .toArray();
+
+      return coursesArr.map((object) => ({
+        ...object,
+        ["submission"]: sub.find((e) => e.aid == object.aid) || null,
+      }));
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
