@@ -21,7 +21,8 @@ router.route("/posts")
     .get(AltiumCtrl.getPostForUser)
     .post(AltiumCtrl.postPosts);
 router.route("/posts/:id")
-    .get(AltiumCtrl.getPost);
+    .get(AltiumCtrl.getPost)
+    .delete(AltiumCtrl.deletePost);
 router.route("/like")
     .delete(AltiumCtrl.deleteLike)
     .post(AltiumCtrl.postLike);
@@ -58,4 +59,6 @@ router.route("/trending")
 router.route("/assigment")
     .get(AltiumCtrl.getAssigment)
     .post(AltiumCtrl.postAssigment);
+router.route("/submissions")
+    .get(AltiumCtrl.getSubmission);
 export default router;

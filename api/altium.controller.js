@@ -51,12 +51,12 @@ export default class AltiumController {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        f_name: req.body.fname,
-        l_name: req.body.lname,
+        f_name: req.body.f_name,
+        l_name: req.body.l_name,
         bio: req.body.bio,
-        profile_picture: req.body.ppic,
+        profile_picture: req.body.profile_picture,
         followers: parseInt(req.body.followers),
-        acc_type: req.body.acc_type,
+        // acc_type: req.body.acc_type,
       };
       const userResponse = await AltiumDAO.updateUser(user);
 
@@ -230,6 +230,18 @@ export default class AltiumController {
 
       const id = req.params.id;
       const userResponse = await AltiumDAO.getPost(id);
+
+      res.status(200).json(userResponse);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async deletePost(req, res, next) {
+    try {
+      console.log(`deleting post.... ${req.params.id}`);
+
+      const id = req.params.id;
+      const userResponse = await AltiumDAO.deletePost(id);
 
       res.status(200).json(userResponse);
     } catch (e) {
@@ -711,6 +723,16 @@ export default class AltiumController {
       const sid = req.query.sid;
       const cid = req.query.cid;
       let serverRes = await AltiumDAO.getAssigments(sid, cid);
+      res.status(200).json(serverRes);
+      console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async getSubmission(req, res, next) {
+    try {
+      const aid = req.query.aid;
+      let serverRes = await AltiumDAO.getSubmissions(aid);
       res.status(200).json(serverRes);
       console.log(serverRes);
     } catch (e) {

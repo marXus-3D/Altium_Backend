@@ -97,6 +97,27 @@ export default class AltiumDAO {
   static async deleteUser(userId) {
     try {
       console.log(`deleteing user ${userId}`);
+      await followers.deleteMany({
+        $or: [
+          { following_id: userId },
+          {
+            follower_id: userId,
+          },
+        ],
+      });
+      await students.deleteMany({ user_id: userId });
+      await teachers.deleteMany({ user_id: userId });
+      await posts.deleteMany({ user_id: userId });
+      await likes.deleteMany({ user_id: userId });
+      await messages.deleteMany({
+        $or: [{ sender_id: userId }, { reciever_id: userId }],
+      });
+      await comments.deleteMany({ user_id: userId });
+      await courses.deleteMany({ tid: userId });
+      await enrolled.deleteMany({ sid: userId });
+      await notifications.deleteMany({ user_id: userId });
+      await submissions.deleteMany({ sid: userId });
+
       return await users.deleteOne({ user_id: userId });
     } catch (e) {
       console.error(`Unable to delete user: ${e}`);
@@ -401,6 +422,18 @@ export default class AltiumDAO {
       }
     } catch (e) {
       console.log(`error while getting post ${e.message}`);
+      throw e;
+    }
+  }
+  static async deletePost(id) {
+    try {
+      const query = {
+        post_id: id,
+      };
+      console.log(`deleteing post ${query}`);
+      return await posts.deleteOne(query);
+    } catch (e) {
+      console.error(`Unable to delete post: ${e}`);
       throw e;
     }
   }
@@ -730,7 +763,10 @@ export default class AltiumDAO {
     try {
       const query = { user_id: uid };
 
-      const coursesArr = await notifications.find(query).toArray();
+      const coursesArr = await notifications
+        .find(query)
+        .sort({ timestamp: -1 })
+        .toArray();
 
       return coursesArr;
     } catch (e) {
@@ -913,6 +949,19 @@ export default class AltiumDAO {
         ...object,
         ["submission"]: sub.find((e) => e.aid == object.aid) || null,
       }));
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async getSubmissions(aid) {
+    try {
+      const query = { aid: aid };
+
+      const subs = submissions.find(query).toArray();
+
+      return subs;
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;
