@@ -370,11 +370,27 @@ export default class AltiumDAO {
   }
   static async getRecommendationPosts(id) {
     try {
+      const userAcc = await users.findOne({user_id: id});
+      if(!userAcc)
+        throw new Error("No user found with that id");
+
       console.log(`getting postfrom db`);
       const user = await posts
         .find({ user_id: { $ne: id } })
-        .sort({ timestamp: -1 });
+        .sort({ timestamp: -1 })
+        .limit(25);
       const post = await user.toArray();
+      const likedRes = await likes.find({
+        user_id: id,
+      }).limit(25).toArray();
+      const liked = likedRes.map(e => e.post_id);
+      const followingRes = await followers.find({follower_id: id}).limit(25).toArray();
+      const following = followingRes.map(e => e.follower_id);
+
+      const followingPost = await posts.find({user_id: {$in : following}}).toArray();
+      const likedPost = await posts.find({post_id: {$in : liked}}).toArray();
+
+      const finalArr = shuffleArray([...followingPost, ...likedPost, ...post])
 
       // post.forEach(async (element) => {
       //   const filter = {
@@ -384,7 +400,8 @@ export default class AltiumDAO {
       //   element.like = await AltiumDAO.getUserAndPostLike(filter);
       // });
 
-      const finalPosts = post.map(async (element) => {
+      const finalSet = new Set();
+      const finalPosts = finalArr.map(async (element) => {
         const filter = {
           user_id: id,
           post_id: element.post_id,
@@ -392,13 +409,14 @@ export default class AltiumDAO {
         const like = await AltiumDAO.getUserAndPostLike(filter);
         console.warn("this like is", like);
         element.like = like; // Assuming like is a boolean or object
+        finalSet.add(element);
         return element;
       });
 
       const finalPost = (await Promise.all(finalPosts)).sort();
       if (finalPost.length > 0) {
         console.log("Found post:", finalPost);
-        return finalPost;
+        return Array.from(finalSet);
       } else {
         throw new Error("No post found with the provided postid");
       }
@@ -617,6 +635,7 @@ export default class AltiumDAO {
       console.error(`Unable to post comment: ${e}`);
       throw e;
     }
+    f;
   }
 
   static async getReceivers(userId) {
