@@ -370,9 +370,8 @@ export default class AltiumDAO {
   }
   static async getRecommendationPosts(id) {
     try {
-      const userAcc = await users.findOne({user_id: id});
-      if(!userAcc)
-        throw new Error("No user found with that id");
+      const userAcc = await users.findOne({ user_id: id });
+      if (!userAcc) throw new Error("No user found with that id");
 
       console.log(`getting postfrom db`);
       const user = await posts
@@ -380,17 +379,25 @@ export default class AltiumDAO {
         .sort({ timestamp: -1 })
         .limit(25);
       const post = await user.toArray();
-      const likedRes = await likes.find({
-        user_id: id,
-      }).limit(25).toArray();
-      const liked = likedRes.map(e => e.post_id);
-      const followingRes = await followers.find({follower_id: id}).limit(25).toArray();
-      const following = followingRes.map(e => e.follower_id);
+      const likedRes = await likes
+        .find({
+          user_id: id,
+        })
+        .limit(25)
+        .toArray();
+      const liked = likedRes.map((e) => e.post_id);
+      const followingRes = await followers
+        .find({ follower_id: id })
+        .limit(25)
+        .toArray();
+      const following = followingRes.map((e) => e.follower_id);
 
-      const followingPost = await posts.find({user_id: {$in : following}}).toArray();
-      const likedPost = await posts.find({post_id: {$in : liked}}).toArray();
+      const followingPost = await posts
+        .find({ user_id: { $in: following } })
+        .toArray();
+      const likedPost = await posts.find({ post_id: { $in: liked } }).toArray();
 
-      const finalArr = shuffleArray([...followingPost, ...likedPost, ...post])
+      const finalArr = shuffleArray([...followingPost, ...likedPost, ...post]);
 
       // post.forEach(async (element) => {
       //   const filter = {
@@ -539,6 +546,44 @@ export default class AltiumDAO {
       });
     } catch (e) {
       console.error(`Unable to update post: ${e}`);
+      throw e;
+    }
+  }
+
+  static async updateCourse(course) {
+    try {
+      console.log(`updating course `, course);
+
+      const updateCriteria = { cid: course.cid };
+      const updateData = {
+        $set: {
+          tid: course.tid,
+          desc: course.desc,
+          name: course.name
+        },
+      };
+
+      await courses.updateOne(updateCriteria, updateData).then((updateResult) => {
+        if (updateResult.matchedCount === 1) {
+          return updateResult;
+        } else {
+          throw new Error("No course found");
+        }
+      });
+    } catch (e) {
+      console.error(`Unable to update post: ${e}`);
+      throw e;
+    }
+  }
+  static async deleteCourse(cid) {
+    try {
+      console.log(`deleting course `, cid);
+
+      const updateCriteria = { cid: cid };
+
+      await courses.deleteOne(updateCriteria);
+    } catch (e) {
+      console.error(`Unable to delete course: ${e}`);
       throw e;
     }
   }
@@ -981,6 +1026,23 @@ export default class AltiumDAO {
       const subs = submissions.find(query).toArray();
 
       return subs;
+    } catch (e) {
+      console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+
+  static async getTeachers(sid, cid) {
+    try {
+      const query = {};
+
+      const tidArr = await teachers.find(query).toArray();
+
+      const teachs = await users
+        .find({ user_id: { $in: tidArr.map((e) => e.user_id) } })
+        .toArray();
+
+      return teachs;
     } catch (e) {
       console.error("Error fetching data from the database:", e);
       throw e;

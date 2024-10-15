@@ -41,7 +41,8 @@ router.route("/events")
 router.route("/courses")
     .get(AltiumCtrl.getCourses)
     .post(AltiumCtrl.postCourses)
-    .put(AltiumCtrl.putCourses);
+    .put(AltiumCtrl.putCourses)
+    .delete(AltiumCtrl.deleteCourses);
 router.route("/enroll/:id")
     .get(AltiumCtrl.getStudents)
     .post(AltiumCtrl.postEnrollment);
@@ -61,4 +62,6 @@ router.route("/assigment")
     .post(AltiumCtrl.postAssigment);
 router.route("/submissions")
     .get(AltiumCtrl.getSubmission);
+router.route("/teachers")
+    .get(AltiumCtrl.getTeachers);
 export default router;

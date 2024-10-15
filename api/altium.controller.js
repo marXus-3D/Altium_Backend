@@ -509,8 +509,28 @@ export default class AltiumController {
     try {
       const tid = req.query.tid;
 
+      if(!tid)
+      {
+        const response = await AltiumDAO.getAllCourse();
+
+        res.status(200).json(response);
+        return;
+      }
+
       const students = await AltiumDAO.getCourses(tid);
       res.status(200).json(students);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async getTeachers(req, res, next) {
+    try {
+      console.log(`getting all teachers`);
+
+      
+      let serverRes = await AltiumDAO.getTeachers();
+      res.status(200).json(serverRes);
+      console.log(serverRes);
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
@@ -536,11 +556,22 @@ export default class AltiumController {
     try {
       console.log(`updating student courses.... for ${req.body.students}`);
 
-      const students = req.body.students; /* {
-        cid: req.body.cid,
-        sid: req.body.sid,
-        grade: req.body.grade
-      };*/
+      const students = req.body.students; 
+
+      if(!students)
+      {
+        console.log("This is trying");
+        const course = {
+          cid: req.body.cid,
+          tid: req.body.tid,
+          desc: req.body.desc,
+          name: req.body.name,
+        }
+        const resp = await AltiumDAO.updateCourse(course);
+        res.status(200).json({ status: "success" });
+        return;
+      }
+
       students.forEach(async (stu) => {
         const notification = {
           user_id: stu.sid,
@@ -554,6 +585,16 @@ export default class AltiumController {
       let serverRes = await AltiumDAO.updateStudents(students);
       res.status(200).json({ status: "success" });
       console.log(serverRes);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async deleteCourses(req, res, next) {
+    try {
+      console.log(`deleting courses.... for ${req.body.cid}`);
+
+      const resp = await AltiumDAO.deleteCourse(req.body.cid);
+      res.status(200).json({ status: "success" });
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
