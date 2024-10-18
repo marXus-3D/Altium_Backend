@@ -90,6 +90,10 @@ export default class AltiumController {
         res.status(200).json(userResponse);
       }
     } catch (e) {
+      if(e.message.includes("No user found with the provided user_id"))
+      {
+        res.status(404).json({ error: e.message });
+      }else
       res.status(500).json({ error: e.message });
     }
   }
