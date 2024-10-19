@@ -89,11 +89,9 @@ export default class AltiumController {
         res.status(200).json(userResponse);
       }
     } catch (e) {
-      if(e.message.includes("No user found with the provided user_id"))
-      {
+      if (e.message.includes("No user found with the provided user_id")) {
         res.status(404).json({ error: e.message });
-      }else
-      res.status(500).json({ error: e.message });
+      } else res.status(500).json({ error: e.message });
     }
   }
 
@@ -187,14 +185,14 @@ export default class AltiumController {
         following_id: req.body.following_id,
       };
       let userResponse;
+      let followingUpdate;
       const followResponse = await AltiumDAO.deleteFollowers(followers).then(
         (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers--,
-        AltiumDAO.updateUser(userResponse).then(
-          (followingUpdate = await AltiumDAO.getUser(followers.follower_id)),
-          followingUpdate.following--,
-          AltiumDAO.updateUser(followingUpdate)
-        )
+        AltiumDAO.updateUser(userResponse),
+        ((followingUpdate = await AltiumDAO.getUser(followers.follower_id)),
+        followingUpdate.following--,
+        AltiumDAO.updateUser(followingUpdate))
       );
       res.status(200).json({ status: "success" });
       console.log(userResponse);
@@ -516,8 +514,7 @@ export default class AltiumController {
     try {
       const tid = req.query.tid;
 
-      if(!tid)
-      {
+      if (!tid) {
         const response = await AltiumDAO.getAllCourse();
 
         res.status(200).json(response);
@@ -534,7 +531,6 @@ export default class AltiumController {
     try {
       console.log(`getting all teachers`);
 
-      
       let serverRes = await AltiumDAO.getTeachers();
       res.status(200).json(serverRes);
       console.log(serverRes);
@@ -563,17 +559,16 @@ export default class AltiumController {
     try {
       console.log(`updating student courses.... for ${req.body.students}`);
 
-      const students = req.body.students; 
+      const students = req.body.students;
 
-      if(!students)
-      {
+      if (!students) {
         console.log("This is trying");
         const course = {
           cid: req.body.cid,
           tid: req.body.tid,
           desc: req.body.desc,
           name: req.body.name,
-        }
+        };
         const resp = await AltiumDAO.updateCourse(course);
         res.status(200).json({ status: "success" });
         return;
@@ -749,7 +744,7 @@ export default class AltiumController {
 
         res.status(200).json({ status: "success" });
         console.log(serverRes);
-      }else {
+      } else {
         const submission = {
           aid: req.body.aid,
           url: req.body.url,
