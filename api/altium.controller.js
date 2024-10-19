@@ -192,7 +192,7 @@ export default class AltiumController {
         (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers--,
         AltiumDAO.updateUser(userResponse)
-      );
+      );//TODO FIX this
       res.status(200).json({ status: "success" });
       console.log(userResponse);
     } catch (e) {
