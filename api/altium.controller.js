@@ -30,7 +30,6 @@ export default class AltiumController {
         account = {
           user_id: user.user_id,
           education_level: req.body.education_level,
-          f,
         };
       }
 
@@ -191,7 +190,11 @@ export default class AltiumController {
       const followResponse = await AltiumDAO.deleteFollowers(followers).then(
         (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers--,
-        AltiumDAO.updateUser(userResponse)
+        AltiumDAO.updateUser(userResponse).then(
+          (followingUpdate = await AltiumDAO.getUser(followers.follower_id)),
+          followingUpdate.following--,
+          AltiumDAO.updateUser(followingUpdate)
+        )
       );
       res.status(200).json({ status: "success" });
       console.log(userResponse);

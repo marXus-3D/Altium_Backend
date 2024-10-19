@@ -13,7 +13,7 @@ router.route("/users")
 router.route("/users/:id/posts")
     .get(AltiumCtrl.getPostByUser);
 router.route("/followers")
-    .delete(AltiumCtrl.deleteFollowers)
+    .delete(AltiumCtrl.deleteFollowers) //Decrease the following count.
     .post(AltiumCtrl.postFollower);
 router.route("/followers/:id")
     .get(AltiumCtrl.getFollowers);
