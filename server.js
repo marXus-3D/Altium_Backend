@@ -4,8 +4,6 @@ import altium from "./api/altium.route.js";
 
 const app = express();
 
-// app.use(cors({ origin: 'http://localhost:3000' }));
-// app.use(cors());
 app.use(cors({
     origin: ['http://localhost:3000', 'https://altium-theta.vercel.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

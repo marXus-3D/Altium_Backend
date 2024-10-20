@@ -806,7 +806,6 @@ export default class AltiumDAO {
     try {
       const coursesArr = await courses.find({}).toArray();
       const enrolledCourseIds = await enrolled.find({ sid: sid }).toArray(); //this will get you all the course the user is enrolled in
-      const arr = [];
       const availableCourses = coursesArr.filter(
         (course) => !enrolledCourseIds.find( e => e.cid == course.cid)
       );

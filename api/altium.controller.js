@@ -626,7 +626,7 @@ export default class AltiumController {
 
   static async postEnrollment(req, res, next) {
     try {
-      console.log(`posting enroll.... for ${req.body}`);
+      console.log(`posting enroll.... for ${req.body.sid}`);
 
       const course = {
         cid: req.params.id,
@@ -637,8 +637,8 @@ export default class AltiumController {
       const teacher = await AltiumDAO.getOneCourse(course.cid).tid;
       const notification = {
         user_id: teacher,
-        content: `Student ${name} has enrolled in a course you teach ${cid}.`,
-        link: `/users/${cid}`,
+        content: `Student ${course.name} has enrolled in a course you teach ${course.cid}.`,
+        link: `/course/${course.cid}`,
         hasRead: false,
       };
       let serverRes = await AltiumDAO.addEnrollment(course);
