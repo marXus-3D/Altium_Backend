@@ -559,17 +559,19 @@ export default class AltiumDAO {
         $set: {
           tid: course.tid,
           desc: course.desc,
-          name: course.name
+          name: course.name,
         },
       };
 
-      await courses.updateOne(updateCriteria, updateData).then((updateResult) => {
-        if (updateResult.matchedCount === 1) {
-          return updateResult;
-        } else {
-          throw new Error("No course found");
-        }
-      });
+      await courses
+        .updateOne(updateCriteria, updateData)
+        .then((updateResult) => {
+          if (updateResult.matchedCount === 1) {
+            return updateResult;
+          } else {
+            throw new Error("No course found");
+          }
+        });
     } catch (e) {
       console.error(`Unable to update post: ${e}`);
       throw e;
@@ -797,6 +799,21 @@ export default class AltiumDAO {
       return coursesArr;
     } catch (e) {
       console.error("Error fetching data from the database:", e);
+      throw e;
+    }
+  }
+  static async getAllCourseNotEnrolled(sid) {
+    try {
+      const coursesArr = await courses.find({}).toArray();
+      const enrolledCourseIds = await enrolled.find({ sid: sid }).toArray(); //this will get you all the course the user is enrolled in
+      const arr = [];
+      const availableCourses = coursesArr.filter(
+        (course) => !enrolledCourseIds.find( e => e.cid == course.cid)
+      );
+
+      return availableCourses;
+    } catch (e) {
+      console.error("Error filtering courses:", e);
       throw e;
     }
   }

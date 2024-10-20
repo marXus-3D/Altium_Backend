@@ -615,7 +615,8 @@ export default class AltiumController {
   static async getAllCourse(req, res, next) {
     try {
       const sid = req.query.sid;
-      let serverRes = await AltiumDAO.getAllCourse();
+      // let serverRes = await AltiumDAO.getAllCourse();
+      const serverRes = await AltiumDAO.getAllCourseNotEnrolled(sid); //@raniabdela 's implementation
       res.status(200).json(serverRes);
       console.log(serverRes);
     } catch (e) {
