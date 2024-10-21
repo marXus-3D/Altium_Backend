@@ -189,9 +189,13 @@ export default class AltiumController {
       const followResponse = await AltiumDAO.deleteFollowers(followers).then(
         (userResponse = await AltiumDAO.getUser(followers.following_id)),
         userResponse.followers--,
+        (userResponse.followers =
+          userResponse.followers < 0 ? 0 : userResponse.followers),
         AltiumDAO.updateUser(userResponse),
         ((followingUpdate = await AltiumDAO.getUser(followers.follower_id)),
         followingUpdate.following--,
+        (followingUpdate.following =
+          followingUpdate.following < 0 ? 0 : followingUpdate.following),
         AltiumDAO.updateUser(followingUpdate))
       );
       res.status(200).json({ status: "success" });
@@ -318,7 +322,8 @@ export default class AltiumController {
       let userResponse;
       const followResponse = await AltiumDAO.deleteLike(like).then(
         (userResponse = await AltiumDAO.getPost(like.post_id)),
-        userResponse.no_like--
+        userResponse.no_like--,
+        userResponse.no_like = userResponse.no_like <0 ? 0 : userResponse.no_like,
       );
       await AltiumDAO.updatePost(userResponse);
       res.status(200).json({ status: "success" });
