@@ -142,6 +142,11 @@ export default class AltiumController {
       console.log(
         `${req.body.follower_id} Following user ${req.body.following_id}`
       );
+      if(req.body.follower_id == req.body.following_id){
+        console.log('can\'t follow yourself')
+        res.status(500).json({ error: 'can\'t follow yourself' });
+        return;
+      }
       const followers = {
         follower_id: req.body.follower_id,
         following_id: req.body.following_id,
